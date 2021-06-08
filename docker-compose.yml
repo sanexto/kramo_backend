@@ -1,0 +1,44 @@
+version: "3"
+services:
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+      target: base
+      args:
+        DB_IMAGE: $DB_IMAGE
+    environment:
+      MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
+      MYSQL_DATABASE: $DB_NAME
+      MYSQL_USER: $DB_USER
+      MYSQL_PASSWORD: $DB_PASSWORD
+    hostname: $DB_HOST
+    ports:
+      - $DB_PORT:$DB_PORT
+    volumes:
+      - ./data:/var/lib/mysql
+    restart: always
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+      target: development
+      args:
+        APP_IMAGE: $APP_IMAGE
+    environment:
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+      - DB_HOST
+      - DB_PORT
+      - DB_DIALECT
+      - APP_PORT
+      - APP_SECRET
+    hostname: $APP_HOST
+    ports:
+      - $APP_PORT:$APP_PORT
+    volumes:
+      - ./app/src:/app/src
+    depends_on:
+      - db
+    restart: always

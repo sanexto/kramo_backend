@@ -1,0 +1,214 @@
+import { NextFunction, Request, Response, } from 'express';
+import { Meta, param, validationResult, } from 'express-validator';
+import { Op, Transaction, } from 'sequelize';
+import _ from 'lodash';
+
+import config from '../../../config';
+import { JsonResponse, Validator, } from '../../../base';
+import { Admin, User, sequelize, } from '../../../models';
+
+class DeleteAdmin {
+
+  public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+    const output: JsonResponse.Output = {
+      status: JsonResponse.Status.Ok,
+      body: {},
+    };
+
+    output.body = {
+      state: 1,
+      error: {
+        message: '',
+      },
+    };
+
+    await param('userId')
+    .exists({ checkNull: true })
+    .withMessage('El campo "Id de usuario" no existe')
+    .bail()
+    .isInt({ allow_leading_zeroes: false })
+    .withMessage('El campo "Id de usuario" no es un número entero')
+    .bail()
+    .isInt({ min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })
+    .withMessage(`El campo "Id de usuario" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
+    .bail()
+    .toInt()
+    .custom((userId: number, meta: Meta): any => {
+
+      if (userId == req.userId) {
+
+        throw new Error('No puedes eliminarte a ti mismo');
+
+      } else {
+
+        return true;
+
+      }
+
+    })
+    .bail()
+    .run(req);
+
+    const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+
+    if (_.isEmpty(validationError)) {
+
+      const userId: number = Number(req.params.userId);
+
+      let admin: Admin | null = null;
+
+      try {
+
+        admin = await Admin.findOne(
+          {
+            include: [
+              {
+                model: User,
+                required: true,
+                where: {
+                  id: {
+                    [Op.eq]: userId,
+                  },
+                },
+              },
+            ],
+          },
+        );
+
+      } catch(e) {}
+
+      if (admin != null) {
+
+        output.body = {
+          state: 2,
+          title: 'Eliminar administrador',
+          content: `¿Está seguro que desea eliminar el administrador "${admin.User.username ?? ''}"?`,
+          form: {
+            deleteAdmin: {
+              button: {
+                cancel: {
+                  label: 'Cancelar',
+                },
+                delete: {
+                  label: 'Eliminar',
+                },
+              },
+            },
+          },
+        };
+
+      } else {
+
+        output.body.error.message = 'El administrador solicitado no existe';
+
+      }
+
+    } else {
+
+      output.body.error.message = validationError[Object.keys(validationError)[0]].message;
+
+    }
+
+    res.json(output);
+
+  }
+
+  public static async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+    const output: JsonResponse.Output = {
+      status: JsonResponse.Status.Ok,
+      body: {},
+    };
+
+    output.body = {
+      state: 2,
+      message: '',
+      field: {},
+    };
+
+    await param('userId')
+    .exists({ checkNull: true })
+    .withMessage('El campo "Id de usuario" no existe')
+    .bail()
+    .isInt({ allow_leading_zeroes: false })
+    .withMessage('El campo "Id de usuario" no es un número entero')
+    .bail()
+    .isInt({ min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })
+    .withMessage(`El campo "Id de usuario" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
+    .bail()
+    .toInt()
+    .custom((userId: number, meta: Meta): any => {
+
+      if (userId == req.userId) {
+
+        throw new Error('No puedes eliminarte a ti mismo');
+
+      } else {
+
+        return true;
+
+      }
+
+    })
+    .bail()
+    .run(req);
+
+    const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+
+    if (_.isEmpty(validationError)) {
+
+      output.body.state = 1;
+
+      const userId: number = Number(req.params.userId);
+
+      let deletedAdmin: boolean = false;
+      const transaction: Transaction = await sequelize.transaction();
+
+      try {
+
+        await User.destroy(
+          {
+            where: {
+              id: userId,
+            },
+            transaction: transaction,
+          },
+        );
+
+        await transaction.commit();
+        deletedAdmin = true;
+
+      } catch (e) {
+
+        await transaction.rollback();
+
+      }
+
+      if (deletedAdmin) {
+
+        output.body.state = 3;
+        output.body.message = 'Administrador eliminado con éxito';
+
+      } else {
+
+        output.body.state = 2;
+        output.body.message = 'No se pudo eliminar el administrador';
+
+      }
+
+    } else {
+
+      output.body.message = validationError[Object.keys(validationError)[0]].message;
+
+    }
+
+    res.json(output);
+
+  }
+
+}
+
+export {
+  DeleteAdmin,
+}
