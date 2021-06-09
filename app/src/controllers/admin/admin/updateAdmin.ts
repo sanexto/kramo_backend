@@ -77,7 +77,7 @@ class UpdateAdmin {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (admin != null) {
 
@@ -278,7 +278,7 @@ class UpdateAdmin {
             },
           );
 
-        } catch(e) {}
+        } catch(_) {}
 
         if (usersAmount > 0) {
 
@@ -360,7 +360,7 @@ class UpdateAdmin {
           await transaction.commit();
           updatedAdmin = true;
 
-        } catch (e) {
+        } catch (_) {
 
           await transaction.rollback();
 

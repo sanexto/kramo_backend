@@ -107,7 +107,7 @@ class Login {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (user != null) {
 
@@ -125,7 +125,7 @@ class Login {
 
             token = jwt.sign(payload, config.secret);
             
-          } catch(e) {}
+          } catch(_) {}
 
           if (token != null) {
 

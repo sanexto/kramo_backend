@@ -141,7 +141,7 @@ class AddGarage {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (usersAmount > 0) {
 
@@ -212,7 +212,7 @@ class AddGarage {
         await transaction.commit();
         addedGarage = true;
 
-      } catch(e) {
+      } catch(_) {
 
         await transaction.rollback();
 

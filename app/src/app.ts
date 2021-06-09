@@ -27,7 +27,7 @@ const app: Application = express();
 
       synchronized = true;
       
-    } catch (e) {}
+    } catch (_) {}
     
   } while (!synchronized);
 

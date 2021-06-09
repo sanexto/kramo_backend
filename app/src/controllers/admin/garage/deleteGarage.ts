@@ -62,7 +62,7 @@ class DeleteGarage {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (garage != null) {
 
@@ -151,7 +151,7 @@ class DeleteGarage {
         await transaction.commit();
         deletedGarage = true;
 
-      } catch (e) {
+      } catch (_) {
 
         await transaction.rollback();
 

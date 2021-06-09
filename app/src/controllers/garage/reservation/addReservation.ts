@@ -209,7 +209,7 @@ class AddReservation {
 
           }
 
-        } catch(e) {
+        } catch(_) {
 
           await transaction.rollback();
 

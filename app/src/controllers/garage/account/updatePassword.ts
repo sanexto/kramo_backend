@@ -92,7 +92,7 @@ class UpdatePassword {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (user != null) {
 
@@ -187,7 +187,7 @@ class UpdatePassword {
         await transaction.commit();
         updatedPassword = true;
 
-      } catch (e) {
+      } catch (_) {
 
         await transaction.rollback();
 

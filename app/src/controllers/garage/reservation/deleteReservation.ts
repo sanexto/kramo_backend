@@ -73,7 +73,7 @@ class DeleteReservation {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (reservation != null) {
 
@@ -162,7 +162,7 @@ class DeleteReservation {
         await transaction.commit();
         deletedReservation = true;
 
-      } catch (e) {
+      } catch (_) {
 
         await transaction.rollback();
 

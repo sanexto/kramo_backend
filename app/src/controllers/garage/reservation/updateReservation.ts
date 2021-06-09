@@ -74,7 +74,7 @@ class UpdateReservation {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (reservation != null) {
 
@@ -307,7 +307,7 @@ class UpdateReservation {
   
             }
   
-          } catch (e) {
+          } catch (_) {
   
             await transaction.rollback();
   

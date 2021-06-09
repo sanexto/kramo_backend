@@ -40,7 +40,7 @@ class Home {
         },
       );
 
-    } catch(e) {}
+    } catch(_) {}
 
     if (admin != null) {
 

@@ -62,7 +62,7 @@ class ViewGarage {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (garage != null) {
 

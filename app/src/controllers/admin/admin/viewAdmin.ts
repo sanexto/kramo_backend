@@ -76,7 +76,7 @@ class ViewAdmin {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (admin != null) {
 

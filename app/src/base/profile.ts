@@ -55,7 +55,7 @@ namespace Profile {
           },
         );
 
-      } catch (e) {}
+      } catch (_) {}
 
     }
 

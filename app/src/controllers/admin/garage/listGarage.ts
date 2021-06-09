@@ -180,7 +180,7 @@ class ListGarage {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (!_.isEmpty(garages)) {
 

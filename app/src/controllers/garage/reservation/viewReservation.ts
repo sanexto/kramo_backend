@@ -74,7 +74,7 @@ class ViewReservation {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (reservation != null) {
 

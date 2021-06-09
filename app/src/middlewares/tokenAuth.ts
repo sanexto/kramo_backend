@@ -52,7 +52,7 @@ function tokenAuth (profile: Profile.Type): (req: Request, res: Response, next: 
           ignoreExpiration: true,
         });
   
-      } catch(e) {}
+      } catch(_) {}
   
       if (payload != null && 'id' in payload && validator.isInt(payload.id.toString(), { min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })) {
 

@@ -63,7 +63,7 @@ class UpdateGarage {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (garage != null) {
 
@@ -229,7 +229,7 @@ class UpdateGarage {
             },
           );
 
-        } catch(e) {}
+        } catch(_) {}
 
         if (usersAmount > 0) {
 
@@ -309,7 +309,7 @@ class UpdateGarage {
           await transaction.commit();
           updatedGarage = true;
 
-        } catch (e) {
+        } catch (_) {
 
           await transaction.rollback();
 

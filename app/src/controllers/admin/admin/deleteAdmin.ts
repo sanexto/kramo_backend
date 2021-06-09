@@ -76,7 +76,7 @@ class DeleteAdmin {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (admin != null) {
 
@@ -179,7 +179,7 @@ class DeleteAdmin {
         await transaction.commit();
         deletedAdmin = true;
 
-      } catch (e) {
+      } catch (_) {
 
         await transaction.rollback();
 

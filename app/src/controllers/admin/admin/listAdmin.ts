@@ -197,7 +197,7 @@ class ListAdmin {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (!_.isEmpty(admins)) {
 

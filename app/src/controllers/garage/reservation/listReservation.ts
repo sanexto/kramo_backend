@@ -285,7 +285,7 @@ class ListReservation {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (!_.isEmpty(reservations)) {
 

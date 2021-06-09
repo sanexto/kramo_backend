@@ -42,7 +42,7 @@ class UpdateAccount {
         },
       );
 
-    } catch(e) {}
+    } catch(_) {}
 
     if (garage != null) {
 
@@ -175,7 +175,7 @@ class UpdateAccount {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (usersAmount > 0) {
 
@@ -228,7 +228,7 @@ class UpdateAccount {
         await transaction.commit();
         updatedAccount = true;
 
-      } catch (e) {
+      } catch (_) {
 
         await transaction.rollback();
 

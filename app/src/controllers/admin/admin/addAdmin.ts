@@ -162,7 +162,7 @@ class AddAdmin {
           },
         );
 
-      } catch(e) {}
+      } catch(_) {}
 
       if (usersAmount > 0) {
 
@@ -235,7 +235,7 @@ class AddAdmin {
         await transaction.commit();
         addedAdmin = true;
 
-      } catch(e) {
+      } catch(_) {
 
         await transaction.rollback();
 
