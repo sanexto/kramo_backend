@@ -6,9 +6,9 @@ import moment from 'moment';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
-import { Garage, Reservation, User, } from '../../../models';
+import { Booking, Garage, User, } from '../../../models';
 
-class ViewReservation {
+class ViewBooking {
 
   public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
 
@@ -24,7 +24,7 @@ class ViewReservation {
       },
     };
 
-    await param('reservationId')
+    await param('bookingId')
     .exists({ checkNull: true })
     .withMessage('El campo "Id de reserva" no existe')
     .bail()
@@ -41,13 +41,13 @@ class ViewReservation {
 
     if (_.isEmpty(validationError)) {
 
-      const reservationId: number = Number(req.params.reservationId);
+      const bookingId: number = Number(req.params.bookingId);
 
-      let reservation: Reservation | null = null;
+      let booking: Booking | null = null;
 
       try {
 
-        reservation = await Reservation.findOne(
+        booking = await Booking.findOne(
           {
             include: [
               {
@@ -68,7 +68,7 @@ class ViewReservation {
             ],
             where: {
               id: {
-                [Op.eq]: reservationId,
+                [Op.eq]: bookingId,
               },
             },
           },
@@ -76,27 +76,27 @@ class ViewReservation {
 
       } catch(_) {}
 
-      if (reservation != null) {
+      if (booking != null) {
 
         output.body = {
           state: 2,
           title: 'Datos de la reserva',
-          reservationInfo: {
-            reservationId: {
+          bookingInfo: {
+            bookingId: {
               label: 'ID',
-              value: reservation.id ?? 0,
+              value: booking.id ?? 0,
             },
             vehiclePlate: {
               label: 'Matrícula del vehículo',
-              value: reservation.vehiclePlate ?? '',
+              value: booking.vehiclePlate ?? '',
             },
             vehicleEntry: {
               label: 'Entrada del vehículo',
-              value: moment(reservation.vehicleEntry).isValid() ? moment(reservation.vehicleEntry).format('YYYY/M/D H:m') : '',
+              value: moment(booking.vehicleEntry).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D H:m') : '',
             },
             vehicleExit: {
               label: 'Salida del vehículo',
-              value: moment(reservation.vehicleExit).isValid() ? moment(reservation.vehicleExit).format('YYYY/M/D H:m') : '',
+              value: moment(booking.vehicleExit).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D H:m') : '',
             },
           },
         };
@@ -120,5 +120,5 @@ class ViewReservation {
 }
 
 export {
-  ViewReservation,
+  ViewBooking,
 }

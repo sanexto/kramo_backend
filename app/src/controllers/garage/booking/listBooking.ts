@@ -6,9 +6,9 @@ import moment from 'moment';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
-import { Garage, Reservation, User, } from '../../../models';
+import { Booking, Garage, User, } from '../../../models';
 
-class ListReservation {
+class ListBooking {
 
   private static lowerTime = '00:00:00';
   private static upperTime = '23:59:59';
@@ -100,8 +100,8 @@ class ListReservation {
     .bail()
     .customSanitizer((vehicleEntry: string[], meta: Meta): string[] => {
 
-      vehicleEntry[0] = `${vehicleEntry[0]} ${ListReservation.lowerTime}`;
-      vehicleEntry[1] = `${vehicleEntry[1]} ${ListReservation.upperTime}`;
+      vehicleEntry[0] = `${vehicleEntry[0]} ${ListBooking.lowerTime}`;
+      vehicleEntry[1] = `${vehicleEntry[1]} ${ListBooking.upperTime}`;
 
       return vehicleEntry;
 
@@ -152,8 +152,8 @@ class ListReservation {
     .bail()
     .customSanitizer((vehicleExit: string[], meta: Meta): string[] => {
 
-      vehicleExit[0] = `${vehicleExit[0]} ${ListReservation.lowerTime}`;
-      vehicleExit[1] = `${vehicleExit[1]} ${ListReservation.upperTime}`;
+      vehicleExit[0] = `${vehicleExit[0]} ${ListBooking.lowerTime}`;
+      vehicleExit[1] = `${vehicleExit[1]} ${ListBooking.upperTime}`;
 
       return vehicleExit;
 
@@ -171,7 +171,7 @@ class ListReservation {
     .notEmpty()
     .withMessage('El campo "Ordenar por" está vacío')
     .bail()
-    .isIn(Object.keys(ListReservation.orderByMap))
+    .isIn(Object.keys(ListBooking.orderByMap))
     .withMessage('El campo "Ordenar por" no tiene un valor permitido')
     .bail()
     .run(req);
@@ -187,7 +187,7 @@ class ListReservation {
     .notEmpty()
     .withMessage('El campo "Orden" está vacío')
     .bail()
-    .isIn(Object.keys(ListReservation.orderMap))
+    .isIn(Object.keys(ListBooking.orderMap))
     .withMessage('El campo "Orden" no tiene un valor permitido')
     .bail()
     .run(req);
@@ -232,11 +232,11 @@ class ListReservation {
       const page: number = Number(req.query.page);
       const pageSize: number = Number(req.query.pageSize);
       
-      let reservations: Reservation[] = [];
+      let bookings: Booking[] = [];
 
       try {
 
-        reservations = await Reservation.findAll(
+        bookings = await Booking.findAll(
           {
             include: [
               {
@@ -258,7 +258,7 @@ class ListReservation {
             where: {
               [Op.or]: [
                 {
-                  '$Reservation.vehiclePlate$': {
+                  '$Booking.vehiclePlate$': {
                     [Op.or]: term.map((token: string): { [Op.substring]: string } => {
   
                       return {
@@ -269,16 +269,16 @@ class ListReservation {
                   },
                 },
               ],
-              '$Reservation.vehicleEntry$': _.isEmpty(vehicleEntry) ? { [Op.and]: [], } : {
+              '$Booking.vehicleEntry$': _.isEmpty(vehicleEntry) ? { [Op.and]: [], } : {
                 [Op.between]: [vehicleEntry[0], vehicleEntry[1]],
               },
-              '$Reservation.vehicleExit$': _.isEmpty(vehicleExit) ? { [Op.and]: [], } : {
+              '$Booking.vehicleExit$': _.isEmpty(vehicleExit) ? { [Op.and]: [], } : {
                 [Op.between]: [vehicleExit[0], vehicleExit[1]],
               },
             },
             order: [
-              [...ListReservation.orderByMap[orderBy], ListReservation.orderMap[order]],
-              ['id', ListReservation.orderMap[order]],
+              [...ListBooking.orderByMap[orderBy], ListBooking.orderMap[order]],
+              ['id', ListBooking.orderMap[order]],
             ],
             offset: pageSize * (page - 1),
             limit: pageSize,
@@ -287,38 +287,38 @@ class ListReservation {
 
       } catch(_) {}
 
-      if (!_.isEmpty(reservations)) {
+      if (!_.isEmpty(bookings)) {
 
-        output.body.item = reservations.map((reservation: Reservation): Record<string, any> => {
+        output.body.item = bookings.map((booking: Booking): Record<string, any> => {
 
           const item: Record<string, any> = {
             info: {
-              reservationId: {
+              bookingId: {
                 label: 'ID',
-                value: reservation.id ?? 0,
+                value: booking.id ?? 0,
               },
               vehiclePlate: {
                 label: 'Matrícula del vehículo',
-                value: reservation.vehiclePlate ?? '',
+                value: booking.vehiclePlate ?? '',
               },
               vehicleEntry: {
                 label: 'Entrada del vehículo',
-                value: moment(reservation.vehicleEntry).isValid() ? moment(reservation.vehicleEntry).format('YYYY/M/D H:m') : '',
+                value: moment(booking.vehicleEntry).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D H:m') : '',
               },
               vehicleExit: {
                 label: 'Salida del vehículo',
-                value: moment(reservation.vehicleExit).isValid() ? moment(reservation.vehicleExit).format('YYYY/M/D H:m') : '',
+                value: moment(booking.vehicleExit).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D H:m') : '',
               },
             },
             menu: {
               item: [
                 {
                   title: 'Modificar',
-                  value: 'updateReservation',
+                  value: 'updateBooking',
                 },
                 {
                   title: 'Eliminar',
-                  value: 'deleteReservation',
+                  value: 'deleteBooking',
                 },
               ],
             },
@@ -343,5 +343,5 @@ class ListReservation {
 }
 
 export {
-  ListReservation,
+  ListBooking,
 }

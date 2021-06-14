@@ -6,9 +6,9 @@ import moment from 'moment';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
-import { Garage, Reservation, User, sequelize, } from '../../../models';
+import { Booking, Garage, User, sequelize, } from '../../../models';
 
-class UpdateReservation {
+class UpdateBooking {
 
   public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
 
@@ -24,7 +24,7 @@ class UpdateReservation {
       },
     };
 
-    await param('reservationId')
+    await param('bookingId')
     .exists({ checkNull: true })
     .withMessage('El campo "Id de reserva" no existe')
     .bail()
@@ -41,13 +41,13 @@ class UpdateReservation {
 
     if (_.isEmpty(validationError)) {
 
-      const reservationId: number = Number(req.params.reservationId);
+      const bookingId: number = Number(req.params.bookingId);
 
-      let reservation: Reservation | null = null;
+      let booking: Booking | null = null;
 
       try {
 
-        reservation = await Reservation.findOne(
+        booking = await Booking.findOne(
           {
             include: [
               {
@@ -68,7 +68,7 @@ class UpdateReservation {
             ],
             where: {
               id: {
-                [Op.eq]: reservationId,
+                [Op.eq]: bookingId,
               },
             },
           },
@@ -76,29 +76,29 @@ class UpdateReservation {
 
       } catch(_) {}
 
-      if (reservation != null) {
+      if (booking != null) {
 
         output.body = {
           state: 2,
           title: 'Modificar reserva',
           form: {
-            updateReservation: {
+            updateBooking: {
               field: {
                 vehiclePlate: {
                   label: 'Matrícula del vehículo',
                   hint: '',
-                  value: reservation.vehiclePlate ?? '',
+                  value: booking.vehiclePlate ?? '',
                 },
                 vehicleEntry: {
                   label: 'Entrada del vehículo',
                   hint: 'Ingresar',
-                  value: moment(reservation.vehicleEntry).isValid() ? moment(reservation.vehicleEntry).format('YYYY/M/D H:m') : '',
+                  value: moment(booking.vehicleEntry).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D H:m') : '',
                   pickerHint: 'DD/MM/AAAA HH:MM',
                 },
                 vehicleExit: {
                   label: 'Salida del vehículo',
                   hint: 'Ingresar',
-                  value: moment(reservation.vehicleExit).isValid() ? moment(reservation.vehicleExit).format('YYYY/M/D H:m') : '',
+                  value: moment(booking.vehicleExit).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D H:m') : '',
                   pickerHint: 'DD/MM/AAAA HH:MM',
                 },
               },
@@ -140,7 +140,7 @@ class UpdateReservation {
       field: {},
     };
 
-    await param('reservationId')
+    await param('bookingId')
     .exists({ checkNull: true })
     .withMessage('El campo "Id de reserva" no existe')
     .bail()
@@ -159,7 +159,7 @@ class UpdateReservation {
 
       output.body.state = 1;
 
-      const reservationId: number = Number(req.params.reservationId);
+      const bookingId: number = Number(req.params.bookingId);
 
       await body('vehiclePlate')
       .exists({ checkNull: true })
@@ -259,7 +259,7 @@ class UpdateReservation {
           const vehicleEntry: Date = new Date(req.body.vehicleEntry);
           const vehicleExit: Date | null = !_.isEmpty(req.body.vehicleExit) ? new Date(req.body.vehicleExit) : null;
 
-          let updatedReservation: boolean = false;
+          let updatedBooking: boolean = false;
           const transaction: Transaction = await sequelize.transaction();
 
           try {
@@ -283,7 +283,7 @@ class UpdateReservation {
   
             if (garage != null) {
 
-              await Reservation.update(
+              await Booking.update(
                 {
                   vehiclePlate,
                   vehicleEntry,
@@ -291,7 +291,7 @@ class UpdateReservation {
                 },
                 {
                   where: {
-                    id: reservationId,
+                    id: bookingId,
                     garageId: garage.id,
                   },
                   transaction: transaction,
@@ -299,7 +299,7 @@ class UpdateReservation {
               );
     
               await transaction.commit();
-              updatedReservation = true;
+              updatedBooking = true;
   
             } else {
   
@@ -313,7 +313,7 @@ class UpdateReservation {
   
           }
 
-          if (updatedReservation) {
+          if (updatedBooking) {
 
             output.body.state = 3;
             output.body.message = 'Reserva modificada con éxito';
@@ -350,5 +350,5 @@ class UpdateReservation {
 }
 
 export {
-  UpdateReservation,
+  UpdateBooking,
 }

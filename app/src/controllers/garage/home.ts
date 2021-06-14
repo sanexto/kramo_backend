@@ -66,7 +66,7 @@ class Home {
           },
         },
         form: {
-          searchReservation: {
+          searchBooking: {
             field: {
               term: {
                 hint: 'Buscar...',
@@ -76,14 +76,14 @@ class Home {
           },
         },
         list: {
-          reservation: {
+          booking: {
             message: {
               empty: 'No se encontraron reservas',
             },
           },
         },
         page: {
-          filterReservation: {
+          filterBooking: {
             title: 'Filtro',
             actionMenu: {
               item: {
@@ -93,7 +93,7 @@ class Home {
               },
             },
             form: {
-              filterReservation: {
+              filterBooking: {
                 field: {
                   vehicleEntry: {
                     label: 'Entrada del vehículo',

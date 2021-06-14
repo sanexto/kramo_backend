@@ -5,9 +5,9 @@ import _ from 'lodash';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
-import { Garage, Reservation, User, sequelize, } from '../../../models';
+import { Booking, Garage, User, sequelize, } from '../../../models';
 
-class DeleteReservation {
+class DeleteBooking {
 
   public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
 
@@ -23,7 +23,7 @@ class DeleteReservation {
       },
     };
 
-    await param('reservationId')
+    await param('bookingId')
     .exists({ checkNull: true })
     .withMessage('El campo "Id de reserva" no existe')
     .bail()
@@ -40,13 +40,13 @@ class DeleteReservation {
 
     if (_.isEmpty(validationError)) {
 
-      const reservationId: number = Number(req.params.reservationId);
+      const bookingId: number = Number(req.params.bookingId);
 
-      let reservation: Reservation | null = null;
+      let booking: Booking | null = null;
 
       try {
 
-        reservation = await Reservation.findOne(
+        booking = await Booking.findOne(
           {
             include: [
               {
@@ -67,7 +67,7 @@ class DeleteReservation {
             ],
             where: {
               id: {
-                [Op.eq]: reservationId,
+                [Op.eq]: bookingId,
               },
             },
           },
@@ -75,14 +75,14 @@ class DeleteReservation {
 
       } catch(_) {}
 
-      if (reservation != null) {
+      if (booking != null) {
 
         output.body = {
           state: 2,
           title: 'Eliminar reserva',
-          content: `¿Está seguro que desea eliminar la reserva #${reservation.id ?? ''}?`,
+          content: `¿Está seguro que desea eliminar la reserva #${booking.id ?? 0}?`,
           form: {
-            deleteReservation: {
+            deleteBooking: {
               button: {
                 cancel: {
                   label: 'Cancelar',
@@ -124,7 +124,7 @@ class DeleteReservation {
       field: {},
     };
 
-    await param('reservationId')
+    await param('bookingId')
     .exists({ checkNull: true })
     .withMessage('El campo "Id de reserva" no existe')
     .bail()
@@ -143,24 +143,24 @@ class DeleteReservation {
 
       output.body.state = 1;
 
-      const reservationId: number = Number(req.params.reservationId);
+      const bookingId: number = Number(req.params.bookingId);
 
-      let deletedReservation: boolean = false;
+      let deletedBooking: boolean = false;
       const transaction: Transaction = await sequelize.transaction();
 
       try {
 
-        await Reservation.destroy(
+        await Booking.destroy(
           {
             where: {
-              id: reservationId,
+              id: bookingId,
             },
             transaction: transaction,
           },
         );
 
         await transaction.commit();
-        deletedReservation = true;
+        deletedBooking = true;
 
       } catch (_) {
 
@@ -168,7 +168,7 @@ class DeleteReservation {
 
       }
 
-      if (deletedReservation) {
+      if (deletedBooking) {
 
         output.body.state = 3;
         output.body.message = 'Reserva eliminada con éxito';
@@ -193,5 +193,5 @@ class DeleteReservation {
 }
 
 export {
-  DeleteReservation,
+  DeleteBooking,
 }

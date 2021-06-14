@@ -55,7 +55,7 @@ class Garage extends Model {
       onUpdate: 'CASCADE',
     });
 
-    Garage.hasMany(models.Reservation, {
+    Garage.hasMany(models.Booking, {
       foreignKey: {
         name: 'garageId',
         allowNull: false,

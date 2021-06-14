@@ -3,8 +3,8 @@ import { Sequelize, } from 'sequelize';
 import config from '../config';
 
 import { Admin, } from './admin';
+import { Booking, } from './booking';
 import { Garage, } from './garage';
-import { Reservation, } from './reservation';
 import { User, } from './user';
 
 const sequelize: Sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, {
@@ -19,8 +19,8 @@ const sequelize: Sequelize = new Sequelize(config.db.name, config.db.user, confi
 
 const models: Record<string, any> = {
   Admin,
+  Booking,
   Garage,
-  Reservation,
   User,
 };
 
@@ -29,8 +29,8 @@ for (const model of Object.values(models)) { model.associate(models); }
 
 export {
   Admin,
+  Booking,
   Garage,
-  Reservation,
   User,
   sequelize,
 }

@@ -1,9 +1,9 @@
 import { Home, } from './home';
-import * as Reservation from './reservation';
+import * as Booking from './booking';
 import * as Account from './account';
 
 export {
   Home,
-  Reservation,
+  Booking,
   Account,
 }

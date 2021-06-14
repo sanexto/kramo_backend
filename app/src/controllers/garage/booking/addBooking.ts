@@ -6,9 +6,9 @@ import moment from 'moment';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
-import { Garage, Reservation, User, sequelize, } from '../../../models';
+import { Booking, Garage, User, sequelize, } from '../../../models';
 
-class AddReservation {
+class AddBooking {
 
   public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
 
@@ -20,7 +20,7 @@ class AddReservation {
     output.body = {
       title: 'Nueva reserva',
       form: {
-        addReservation: {
+        addBooking: {
           field: {
             vehiclePlate: {
               label: 'Matrícula del vehículo',
@@ -164,7 +164,7 @@ class AddReservation {
         const vehicleEntry: Date = new Date(req.body.vehicleEntry);
         const vehicleExit: Date | null = !_.isEmpty(req.body.vehicleExit) ? new Date(req.body.vehicleExit) : null;
 
-        let addedReservation: boolean = false;
+        let addedBooking: boolean = false;
         const transaction: Transaction = await sequelize.transaction();
 
         try {
@@ -188,7 +188,7 @@ class AddReservation {
 
           if (garage != null) {
 
-            await Reservation.create(
+            await Booking.create(
               {
                 vehiclePlate,
                 vehicleEntry,
@@ -201,7 +201,7 @@ class AddReservation {
             );
 
             await transaction.commit();
-            addedReservation = true;
+            addedBooking = true;
 
           } else {
 
@@ -215,7 +215,7 @@ class AddReservation {
 
         }
 
-        if (addedReservation) {
+        if (addedBooking) {
 
           output.body.state = 3;
           output.body.message = 'Reserva agregada con éxito';
@@ -246,5 +246,5 @@ class AddReservation {
 }
 
 export {
-  AddReservation,
+  AddBooking,
 }

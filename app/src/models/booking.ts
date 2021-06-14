@@ -2,7 +2,7 @@ import { DataTypes, Model, Sequelize, } from 'sequelize';
 
 import config from '../config';
 
-class Reservation extends Model {
+class Booking extends Model {
 
   public id!: number;
   public vehiclePlate!: string;
@@ -16,7 +16,7 @@ class Reservation extends Model {
 
   public static initialize (sequelize: Sequelize): void {
 
-    Reservation.init(
+    Booking.init(
       {
         id: {
           type: DataTypes.INTEGER({ length: (config.types.number.max.toString().length + 1) }).UNSIGNED,
@@ -38,10 +38,10 @@ class Reservation extends Model {
       },
       {
         name: {
-          singular: 'Reservation',
-          plural: 'Reservations',
+          singular: 'Booking',
+          plural: 'Bookings',
         },
-        tableName: 'Reservations',
+        tableName: 'Bookings',
         sequelize,
       },
     );
@@ -50,7 +50,7 @@ class Reservation extends Model {
 
   public static associate (models: Record<string, any>): void {
 
-    Reservation.belongsTo(models.Garage, {
+    Booking.belongsTo(models.Garage, {
       foreignKey: {
         name: 'garageId',
         allowNull: false,
@@ -64,5 +64,5 @@ class Reservation extends Model {
 }
 
 export {
-  Reservation,
+  Booking,
 }
