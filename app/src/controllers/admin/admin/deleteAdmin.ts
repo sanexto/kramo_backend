@@ -25,13 +25,13 @@ class DeleteAdmin {
 
     await param('userId')
     .exists({ checkNull: true })
-    .withMessage('El campo "Id de usuario" no existe')
+    .withMessage('El campo "ID de usuario" no existe')
     .bail()
     .isInt({ allow_leading_zeroes: false })
-    .withMessage('El campo "Id de usuario" no es un número entero')
+    .withMessage('El campo "ID de usuario" no es un número entero')
     .bail()
     .isInt({ min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })
-    .withMessage(`El campo "Id de usuario" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
+    .withMessage(`El campo "ID de usuario" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
     .bail()
     .toInt()
     .custom((userId: number, meta: Meta): any => {
@@ -129,13 +129,13 @@ class DeleteAdmin {
 
     await param('userId')
     .exists({ checkNull: true })
-    .withMessage('El campo "Id de usuario" no existe')
+    .withMessage('El campo "ID de usuario" no existe')
     .bail()
     .isInt({ allow_leading_zeroes: false })
-    .withMessage('El campo "Id de usuario" no es un número entero')
+    .withMessage('El campo "ID de usuario" no es un número entero')
     .bail()
     .isInt({ min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })
-    .withMessage(`El campo "Id de usuario" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
+    .withMessage(`El campo "ID de usuario" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
     .bail()
     .toInt()
     .custom((userId: number, meta: Meta): any => {
