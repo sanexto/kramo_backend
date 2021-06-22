@@ -89,17 +89,41 @@ class UpdateBooking {
                   hint: '',
                   value: booking.vehiclePlate ?? '',
                 },
+              },
+              fieldSet: {
                 vehicleEntry: {
                   label: 'Entrada del vehículo',
-                  hint: 'Ingresar',
-                  value: moment(booking.vehicleEntry).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D H:m') : '',
-                  pickerHint: 'DD/MM/AAAA HH:MM',
+                  field: {
+                    date: {
+                      label: 'Fecha',
+                      hint: 'Seleccionar',
+                      value: moment(booking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D') : '',
+                      pickerHint: 'DD/MM/AAAA',
+                    },
+                    time: {
+                      label: 'Hora',
+                      hint: 'Seleccionar',
+                      value: moment(booking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleEntry).format('H:m') : '',
+                      pickerHint: 'HH:MM',
+                    },
+                  },
                 },
                 vehicleExit: {
                   label: 'Salida del vehículo',
-                  hint: 'Ingresar',
-                  value: moment(booking.vehicleExit).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D H:m') : '',
-                  pickerHint: 'DD/MM/AAAA HH:MM',
+                  field: {
+                    date: {
+                      label: 'Fecha',
+                      hint: 'Seleccionar',
+                      value: moment(booking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D') : '',
+                      pickerHint: 'DD/MM/AAAA',
+                    },
+                    time: {
+                      label: 'Hora',
+                      hint: 'Seleccionar',
+                      value: moment(booking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleExit).format('H:m') : '',
+                      pickerHint: 'HH:MM',
+                    },
+                  },
                 },
               },
               button: {
@@ -177,22 +201,22 @@ class UpdateBooking {
       .bail()
       .run(req);
 
-      await body('vehicleEntry')
+      await body('vehicleEntryDate')
       .exists({ checkNull: true })
-      .withMessage('El campo "Entrada del vehículo" no existe')
+      .withMessage('El campo "Fecha de entrada del vehículo" no existe')
       .bail()
       .isString()
-      .withMessage('El campo "Entrada del vehículo" no es una cadena de texto')
+      .withMessage('El campo "Fecha de entrada del vehículo" no es una cadena de texto')
       .bail()
       .trim()
       .notEmpty()
-      .withMessage('Debes ingresar la fecha y hora de entrada del vehículo')
+      .withMessage('Debes ingresar la fecha de entrada del vehículo')
       .bail()
-      .custom((vehicleEntry: string, meta: Meta): any => {
+      .custom((vehicleEntryDate: string, meta: Meta): any => {
 
-        if (!moment(vehicleEntry, 'YYYY/M/D H:m', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
+        if (!moment(vehicleEntryDate, 'YYYY/M/D', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
 
-          throw new Error('El campo "Entrada del vehículo" no tiene un valor válido');
+          throw new Error('El campo "Fecha de entrada del vehículo" no tiene un valor válido');
 
         } else {
 
@@ -204,20 +228,72 @@ class UpdateBooking {
       .bail()
       .run(req);
 
-      await body('vehicleExit')
+      await body('vehicleEntryTime')
       .exists({ checkNull: true })
-      .withMessage('El campo "Salida del vehículo" no existe')
+      .withMessage('El campo "Hora de entrada del vehículo" no existe')
       .bail()
       .isString()
-      .withMessage('El campo "Salida del vehículo" no es una cadena de texto')
+      .withMessage('El campo "Hora de entrada del vehículo" no es una cadena de texto')
       .bail()
       .trim()
-      .if(body('vehicleExit').notEmpty())
-      .custom((vehicleExit: string, meta: Meta): any => {
+      .notEmpty()
+      .withMessage('Debes ingresar la hora de entrada del vehículo')
+      .bail()
+      .custom((vehicleEntryTime: string, meta: Meta): any => {
 
-        if (!moment(vehicleExit, 'YYYY/M/D H:m', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
+        if (!moment(vehicleEntryTime, 'H:m', true).isValid()) {
 
-          throw new Error('El campo "Salida del vehículo" no tiene un valor válido');
+          throw new Error('El campo "Hora de entrada del vehículo" no tiene un valor válido');
+
+        } else {
+
+          return true;
+
+        }
+
+      })
+      .bail()
+      .run(req);
+
+      await body('vehicleExitDate')
+      .exists({ checkNull: true })
+      .withMessage('El campo "Fecha de salida del vehículo" no existe')
+      .bail()
+      .isString()
+      .withMessage('El campo "Fecha de salida del vehículo" no es una cadena de texto')
+      .bail()
+      .trim()
+      .if(body('vehicleExitDate').notEmpty())
+      .custom((vehicleExitDate: string, meta: Meta): any => {
+
+        if (!moment(vehicleExitDate, 'YYYY/M/D', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
+
+          throw new Error('El campo "Fecha de salida del vehículo" no tiene un valor válido');
+
+        } else {
+
+          return true;
+
+        }
+
+      })
+      .bail()
+      .run(req);
+
+      await body('vehicleExitTime')
+      .exists({ checkNull: true })
+      .withMessage('El campo "Hora de salida del vehículo" no existe')
+      .bail()
+      .isString()
+      .withMessage('El campo "Hora de salida del vehículo" no es una cadena de texto')
+      .bail()
+      .trim()
+      .if(body('vehicleExitTime').notEmpty())
+      .custom((vehicleExitTime: string, meta: Meta): any => {
+
+        if (!moment(vehicleExitTime, 'H:m', true).isValid()) {
+
+          throw new Error('El campo "Hora de salida del vehículo" no tiene un valor válido');
 
         } else {
 
@@ -233,21 +309,17 @@ class UpdateBooking {
 
       if (_.isEmpty(validationError)) {
 
-        await body('vehicleExit')
-        .if(body('vehicleExit').notEmpty())
-        .custom((vehicleExit: string, meta: Meta): any => {
+        await body('vehicleExitDate')
+        .if(body('vehicleExitTime').notEmpty())
+        .notEmpty()
+        .withMessage('Debes ingresar la fecha de salida del vehículo')
+        .bail()
+        .run(req);
 
-          if (!moment(vehicleExit, 'YYYY/M/D H:m', true).isSameOrAfter(req.body.vehicleEntry, undefined)) {
-
-            throw new Error('La fecha y hora de salida del vehículo debe ser posterior a la fecha y hora de su entrada');
-
-          } else {
-
-            return true;
-
-          }
-
-        })
+        await body('vehicleExitTime')
+        .if(body('vehicleExitDate').notEmpty())
+        .notEmpty()
+        .withMessage('Debes ingresar la hora de salida del vehículo')
         .bail()
         .run(req);
 
@@ -255,74 +327,108 @@ class UpdateBooking {
 
         if (_.isEmpty(validationError)) {
 
-          const vehiclePlate: string = String(req.body.vehiclePlate);
-          const vehicleEntry: Date = new Date(req.body.vehicleEntry);
-          const vehicleExit: Date | null = !_.isEmpty(req.body.vehicleExit) ? new Date(req.body.vehicleExit) : null;
+          let validationError: Record<string, Validator.ValidationError> = {};
 
-          let updatedBooking: boolean = false;
-          const transaction: Transaction = await sequelize.transaction();
+          if (!_.isEmpty(req.body.vehicleExitDate) && !_.isEmpty(req.body.vehicleExitTime)) {
 
-          try {
+            if (!moment(req.body.vehicleExitDate, 'YYYY/M/D', true).isSameOrAfter(moment(req.body.vehicleEntryDate, 'YYYY/M/D', true))) {
 
-            const garage: Garage | null = await Garage.findOne(
-              {
-                include: [
-                  {
-                    model: User,
-                    required: true,
-                    where: {
-                      id: {
-                        [Op.eq]: req.userId,
+              validationError = {
+                vehicleExitDate: {
+                  message: 'La fecha de salida del vehículo debe ser igual o posterior a la fecha de su entrada',
+                },
+              };
+
+            }
+
+            if (moment(req.body.vehicleExitDate, 'YYYY/M/D', true).isSame(moment(req.body.vehicleEntryDate, 'YYYY/M/D', true)) && !moment(req.body.vehicleExitTime, 'H:m', true).isSameOrAfter(moment(req.body.vehicleEntryTime, 'H:m', true))) {
+
+              validationError = {
+                vehicleExitTime: {
+                  message: 'La hora de salida del vehículo debe ser igual o posterior a la hora de su entrada',
+                },
+              };
+
+            }
+
+          }
+
+          if (_.isEmpty(validationError)) {
+
+            const vehiclePlate: string = String(req.body.vehiclePlate);
+            const vehicleEntry: Date = new Date(`${req.body.vehicleEntryDate} ${req.body.vehicleEntryTime}`);
+            const vehicleExit: Date | null = _.isEmpty(req.body.vehicleExitDate) && _.isEmpty(req.body.vehicleExitTime) ? null : new Date(`${req.body.vehicleExitDate} ${req.body.vehicleExitTime}`);
+
+            let updatedBooking: boolean = false;
+            const transaction: Transaction = await sequelize.transaction();
+
+            try {
+
+              const garage: Garage | null = await Garage.findOne(
+                {
+                  include: [
+                    {
+                      model: User,
+                      required: true,
+                      where: {
+                        id: {
+                          [Op.eq]: req.userId,
+                        },
                       },
                     },
-                  },
-                ],
-                transaction: transaction,
-              },
-            );
-  
-            if (garage != null) {
-
-              await Booking.update(
-                {
-                  vehiclePlate,
-                  vehicleEntry,
-                  vehicleExit,
-                },
-                {
-                  where: {
-                    id: bookingId,
-                    garageId: garage.id,
-                  },
+                  ],
                   transaction: transaction,
                 },
               );
     
-              await transaction.commit();
-              updatedBooking = true;
-  
-            } else {
-  
+              if (garage != null) {
+
+                await Booking.update(
+                  {
+                    vehiclePlate,
+                    vehicleEntry,
+                    vehicleExit,
+                  },
+                  {
+                    where: {
+                      id: bookingId,
+                      garageId: garage.id,
+                    },
+                    transaction: transaction,
+                  },
+                );
+      
+                await transaction.commit();
+                updatedBooking = true;
+    
+              } else {
+    
+                await transaction.rollback();
+    
+              }
+    
+            } catch (_) {
+    
               await transaction.rollback();
-  
+    
             }
-  
-          } catch (_) {
-  
-            await transaction.rollback();
-  
-          }
 
-          if (updatedBooking) {
+            if (updatedBooking) {
 
-            output.body.state = 3;
-            output.body.message = 'Reserva modificada con éxito';
-  
+              output.body.state = 3;
+              output.body.message = 'Reserva modificada con éxito';
+    
+            } else {
+    
+              output.body.state = 2;
+              output.body.message = 'No se pudo modificar la reserva';
+    
+            }
+
           } else {
-  
-            output.body.state = 2;
-            output.body.message = 'No se pudo modificar la reserva';
-  
+
+            output.body.field = validationError;
+
           }
 
         } else {
@@ -330,7 +436,7 @@ class UpdateBooking {
           output.body.field = validationError;
 
         }
-
+        
       } else {
 
         output.body.field = validationError;
