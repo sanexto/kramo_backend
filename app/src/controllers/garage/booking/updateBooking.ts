@@ -305,130 +305,120 @@ class UpdateBooking {
       .bail()
       .run(req);
 
+      await body('vehicleExitDate')
+      .if(body('vehicleExitTime').notEmpty())
+      .notEmpty()
+      .withMessage('Debes ingresar la fecha de salida del vehículo')
+      .bail()
+      .run(req);
+
+      await body('vehicleExitTime')
+      .if(body('vehicleExitDate').notEmpty())
+      .notEmpty()
+      .withMessage('Debes ingresar la hora de salida del vehículo')
+      .bail()
+      .run(req);
+
       const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
       if (_.isEmpty(validationError)) {
 
-        await body('vehicleExitDate')
-        .if(body('vehicleExitTime').notEmpty())
-        .notEmpty()
-        .withMessage('Debes ingresar la fecha de salida del vehículo')
-        .bail()
-        .run(req);
+        let validationError: Record<string, Validator.ValidationError> = {};
 
-        await body('vehicleExitTime')
-        .if(body('vehicleExitDate').notEmpty())
-        .notEmpty()
-        .withMessage('Debes ingresar la hora de salida del vehículo')
-        .bail()
-        .run(req);
+        if (!_.isEmpty(req.body.vehicleExitDate) && !_.isEmpty(req.body.vehicleExitTime)) {
 
-        const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+          if (!moment(req.body.vehicleExitDate, 'YYYY/M/D', true).isSameOrAfter(moment(req.body.vehicleEntryDate, 'YYYY/M/D', true))) {
 
-        if (_.isEmpty(validationError)) {
-
-          let validationError: Record<string, Validator.ValidationError> = {};
-
-          if (!_.isEmpty(req.body.vehicleExitDate) && !_.isEmpty(req.body.vehicleExitTime)) {
-
-            if (!moment(req.body.vehicleExitDate, 'YYYY/M/D', true).isSameOrAfter(moment(req.body.vehicleEntryDate, 'YYYY/M/D', true))) {
-
-              validationError = {
-                vehicleExitDate: {
-                  message: 'La fecha de salida del vehículo debe ser igual o posterior a la fecha de su entrada',
-                },
-              };
-
-            }
-
-            if (moment(req.body.vehicleExitDate, 'YYYY/M/D', true).isSame(moment(req.body.vehicleEntryDate, 'YYYY/M/D', true)) && !moment(req.body.vehicleExitTime, 'H:m', true).isSameOrAfter(moment(req.body.vehicleEntryTime, 'H:m', true))) {
-
-              validationError = {
-                vehicleExitTime: {
-                  message: 'La hora de salida del vehículo debe ser igual o posterior a la hora de su entrada',
-                },
-              };
-
-            }
+            validationError = {
+              vehicleExitDate: {
+                message: 'La fecha de salida del vehículo debe ser igual o posterior a la fecha de su entrada',
+              },
+            };
 
           }
 
-          if (_.isEmpty(validationError)) {
+          if (moment(req.body.vehicleExitDate, 'YYYY/M/D', true).isSame(moment(req.body.vehicleEntryDate, 'YYYY/M/D', true)) && !moment(req.body.vehicleExitTime, 'H:m', true).isSameOrAfter(moment(req.body.vehicleEntryTime, 'H:m', true))) {
 
-            const vehiclePlate: string = String(req.body.vehiclePlate);
-            const vehicleEntry: Date = new Date(`${req.body.vehicleEntryDate} ${req.body.vehicleEntryTime}`);
-            const vehicleExit: Date | null = _.isEmpty(req.body.vehicleExitDate) && _.isEmpty(req.body.vehicleExitTime) ? null : new Date(`${req.body.vehicleExitDate} ${req.body.vehicleExitTime}`);
+            validationError = {
+              vehicleExitTime: {
+                message: 'La hora de salida del vehículo debe ser igual o posterior a la hora de su entrada',
+              },
+            };
 
-            let updatedBooking: boolean = false;
-            const transaction: Transaction = await sequelize.transaction();
+          }
 
-            try {
+        }
 
-              const garage: Garage | null = await Garage.findOne(
-                {
-                  include: [
-                    {
-                      model: User,
-                      required: true,
-                      where: {
-                        id: {
-                          [Op.eq]: req.userId,
-                        },
+        if (_.isEmpty(validationError)) {
+
+          const vehiclePlate: string = String(req.body.vehiclePlate);
+          const vehicleEntry: Date = new Date(`${req.body.vehicleEntryDate} ${req.body.vehicleEntryTime}`);
+          const vehicleExit: Date | null = _.isEmpty(req.body.vehicleExitDate) && _.isEmpty(req.body.vehicleExitTime) ? null : new Date(`${req.body.vehicleExitDate} ${req.body.vehicleExitTime}`);
+
+          let updatedBooking: boolean = false;
+          const transaction: Transaction = await sequelize.transaction();
+
+          try {
+
+            const garage: Garage | null = await Garage.findOne(
+              {
+                include: [
+                  {
+                    model: User,
+                    required: true,
+                    where: {
+                      id: {
+                        [Op.eq]: req.userId,
                       },
                     },
-                  ],
+                  },
+                ],
+                transaction: transaction,
+              },
+            );
+  
+            if (garage != null) {
+
+              await Booking.update(
+                {
+                  vehiclePlate,
+                  vehicleEntry,
+                  vehicleExit,
+                },
+                {
+                  where: {
+                    id: bookingId,
+                    garageId: garage.id,
+                  },
                   transaction: transaction,
                 },
               );
     
-              if (garage != null) {
-
-                await Booking.update(
-                  {
-                    vehiclePlate,
-                    vehicleEntry,
-                    vehicleExit,
-                  },
-                  {
-                    where: {
-                      id: bookingId,
-                      garageId: garage.id,
-                    },
-                    transaction: transaction,
-                  },
-                );
-      
-                await transaction.commit();
-                updatedBooking = true;
-    
-              } else {
-    
-                await transaction.rollback();
-    
-              }
-    
-            } catch (_) {
-    
-              await transaction.rollback();
-    
-            }
-
-            if (updatedBooking) {
-
-              output.body.state = 3;
-              output.body.message = 'Reserva modificada con éxito';
-    
+              await transaction.commit();
+              updatedBooking = true;
+  
             } else {
-    
-              output.body.state = 2;
-              output.body.message = 'No se pudo modificar la reserva';
-    
+  
+              await transaction.rollback();
+  
             }
+  
+          } catch (_) {
+  
+            await transaction.rollback();
+  
+          }
 
+          if (updatedBooking) {
+
+            output.body.state = 3;
+            output.body.message = 'Reserva modificada con éxito';
+  
           } else {
-
-            output.body.field = validationError;
-
+  
+            output.body.state = 2;
+            output.body.message = 'No se pudo modificar la reserva';
+  
           }
 
         } else {
@@ -436,7 +426,7 @@ class UpdateBooking {
           output.body.field = validationError;
 
         }
-        
+
       } else {
 
         output.body.field = validationError;
