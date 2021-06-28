@@ -97,13 +97,13 @@ class UpdateBooking {
                     date: {
                       label: 'Fecha',
                       hint: 'Seleccionar',
-                      value: moment(booking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D') : '',
+                      value: booking.vehicleEntry != null ? moment(booking.vehicleEntry).format('YYYY/M/D') : '',
                       pickerHint: 'DD/MM/AAAA',
                     },
                     time: {
                       label: 'Hora',
                       hint: 'Seleccionar',
-                      value: moment(booking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleEntry).format('H:m') : '',
+                      value: booking.vehicleEntry != null ? moment(booking.vehicleEntry).format('H:m') : '',
                       pickerHint: 'HH:MM',
                     },
                   },
@@ -114,13 +114,13 @@ class UpdateBooking {
                     date: {
                       label: 'Fecha',
                       hint: 'Seleccionar',
-                      value: moment(booking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D') : '',
+                      value: booking.vehicleExit != null ? moment(booking.vehicleExit).format('YYYY/M/D') : '',
                       pickerHint: 'DD/MM/AAAA',
                     },
                     time: {
                       label: 'Hora',
                       hint: 'Seleccionar',
-                      value: moment(booking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleExit).format('H:m') : '',
+                      value: booking.vehicleExit != null ? moment(booking.vehicleExit).format('H:m') : '',
                       pickerHint: 'HH:MM',
                     },
                   },
