@@ -7,6 +7,7 @@ class User extends Model {
   public id!: number;
   public username!: string;
   public password!: string;
+  public enabled!: boolean;
   public profile!: string;
 
   public readonly createdAt!: Date;
