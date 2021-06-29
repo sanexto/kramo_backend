@@ -31,7 +31,7 @@ class ListGarage {
     output.body = {
       state: 1,
       message: '',
-      item: [],
+      items: [],
     };
 
     await query('term')
@@ -184,7 +184,7 @@ class ListGarage {
 
       if (!_.isEmpty(garages)) {
 
-        output.body.item = garages.map((garage: Garage): Record<string, any> => {
+        output.body.items = garages.map((garage: Garage): Record<string, any> => {
 
           const item: Record<string, any> = {
             info: {

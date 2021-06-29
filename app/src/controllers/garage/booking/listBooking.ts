@@ -35,7 +35,7 @@ class ListBooking {
     output.body = {
       state: 1,
       message: '',
-      item: [],
+      items: [],
     };
 
     await query('term')
@@ -289,14 +289,11 @@ class ListBooking {
 
       if (!_.isEmpty(bookings)) {
 
-        output.body.item = bookings.map((booking: Booking): Record<string, any> => {
+        output.body.items = bookings.map((booking: Booking): Record<string, any> => {
 
           const item: Record<string, any> = {
             info: {
-              bookingId: {
-                label: 'ID',
-                value: booking.id ?? 0,
-              },
+              bookingId: booking.id ?? 0,
               vehiclePlate: {
                 label: 'Matrícula del vehículo',
                 value: booking.vehiclePlate ?? '',

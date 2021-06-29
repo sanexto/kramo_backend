@@ -32,7 +32,7 @@ class ListAdmin {
     output.body = {
       state: 1,
       message: '',
-      item: [],
+      items: [],
     };
 
     await query('term')
@@ -201,7 +201,7 @@ class ListAdmin {
 
       if (!_.isEmpty(admins)) {
 
-        output.body.item = admins.map((admin: Admin): Record<string, any> => {
+        output.body.items = admins.map((admin: Admin): Record<string, any> => {
 
           const item: Record<string, any> = {
             info: {
