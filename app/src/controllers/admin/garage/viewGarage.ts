@@ -82,6 +82,10 @@ class ViewGarage {
               label: 'Usuario',
               value: garage.User.username ?? '',
             },
+            enabled: {
+              label: 'Habilitado',
+              value: garage.User.enabled != null ? (garage.User.enabled ? 'Sí' : 'No') : '',
+            },
             picture: `${(garage.User.username ?? '').substr(0, 1).toUpperCase()}${(garage.User.username ?? '').substr(-1, 1).toUpperCase()}`,
           },
         };

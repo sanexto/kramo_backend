@@ -30,6 +30,10 @@ class User extends Model {
           type: DataTypes.STRING({ length: 255 }),
           allowNull: false,
         },
+        enabled: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+        },
         profile: {
           type: DataTypes.STRING({ length: 255 }),
           allowNull: false,

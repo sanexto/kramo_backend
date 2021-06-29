@@ -15,6 +15,7 @@ export default {
               id: 1,
               username: 'sanexto',
               password: '$2b$10$L5itBz7cENWYqS6ilXu7iuXBVxrsKj/uVHYuDi4scxQ3lODOhhTPm',
+              enabled: true,
               profile: 'admin',
               createdAt: now,
               updatedAt: now,

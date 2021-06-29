@@ -100,6 +100,10 @@ class ViewAdmin {
               label: 'Usuario',
               value: admin.User.username ?? '',
             },
+            enabled: {
+              label: 'Habilitado',
+              value: admin.User.enabled != null ? (admin.User.enabled ? 'Sí' : 'No') : '',
+            },
             picture: `${(admin.User.username ?? '').substr(0, 1).toUpperCase()}${(admin.User.username ?? '').substr(-1, 1).toUpperCase()}`,
           },
         };

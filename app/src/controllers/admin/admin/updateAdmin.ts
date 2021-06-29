@@ -113,6 +113,10 @@ class UpdateAdmin {
                   value: '',
                   reveal: false,
                 },
+                enabled: {
+                  label: 'Habilitado',
+                  value: admin.User.enabled ?? false,
+                },
               },
               button: {
                 update: {
@@ -306,6 +310,15 @@ class UpdateAdmin {
       .bail()
       .run(req);
 
+      await body('enabled')
+      .exists({ checkNull: true })
+      .withMessage('El campo "Habilitado" no existe')
+      .bail()
+      .isBoolean()
+      .withMessage('El campo "Habilitado" no es un booleano')
+      .bail()
+      .run(req);
+
       const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
       if (_.isEmpty(validationError)) {
@@ -315,9 +328,11 @@ class UpdateAdmin {
         const email: string = String(req.body.email);
         const username: string = String(req.body.username);
         const password: string = String(req.body.password);
+        const enabled: boolean = Boolean(req.body.enabled);
 
         const user: Record<string, any> = {
           username: username,
+          enabled: enabled,
         };
 
         if (!_.isEmpty(password)) {

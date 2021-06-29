@@ -47,6 +47,10 @@ class AddAdmin {
               value: '',
               reveal: false,
             },
+            enabled: {
+              label: 'Habilitado',
+              value: false,
+            },
           },
           button: {
             add: {
@@ -192,6 +196,15 @@ class AddAdmin {
     .bail()
     .run(req);
 
+    await body('enabled')
+    .exists({ checkNull: true })
+    .withMessage('El campo "Habilitado" no existe')
+    .bail()
+    .isBoolean()
+    .withMessage('El campo "Habilitado" no es un booleano')
+    .bail()
+    .run(req);
+
     const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
     if (_.isEmpty(validationError)) {
@@ -201,6 +214,7 @@ class AddAdmin {
       const email: string = String(req.body.email);
       const username: string = String(req.body.username);
       const password: string = String(req.body.password);
+      const enabled: boolean = Boolean(req.body.enabled);
 
       const hash: string = await bcrypt.hash(password, await bcrypt.genSalt());
 
@@ -213,6 +227,7 @@ class AddAdmin {
           {
             username: username,
             password: hash,
+            enabled: enabled,
             profile: Profile.Type.Admin,
           },
           {
