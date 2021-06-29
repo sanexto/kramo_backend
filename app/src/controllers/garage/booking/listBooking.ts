@@ -300,11 +300,11 @@ class ListBooking {
               },
               vehicleEntry: {
                 label: 'Entrada del vehículo',
-                value: moment(booking.vehicleEntry).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D H:m') : '',
+                value: moment(booking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D H:m') : '',
               },
               vehicleExit: {
                 label: 'Salida del vehículo',
-                value: moment(booking.vehicleExit).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D H:m') : '',
+                value: moment(booking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D H:m') : '-',
               },
             },
             menu: {
