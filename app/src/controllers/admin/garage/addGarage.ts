@@ -4,7 +4,7 @@ import { Op, Transaction, } from 'sequelize';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
 
-import { JsonResponse, Profile, Validator, } from '../../../base';
+import { JsonResponse, User as UserBase, Validator, } from '../../../base';
 import { Garage, User, sequelize, } from '../../../models';
 
 class AddGarage {
@@ -206,7 +206,7 @@ class AddGarage {
             username: username,
             password: hash,
             enabled: enabled,
-            profile: Profile.Type.Garage,
+            profile: UserBase.Profile.Garage,
           },
           {
             transaction: transaction,

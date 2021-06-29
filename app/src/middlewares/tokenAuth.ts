@@ -5,9 +5,9 @@ import jwt from 'jsonwebtoken';
 import validator from 'validator';
 
 import config from '../config';
-import { JsonResponse, Payload, Profile, Validator, } from '../base';
+import { JsonResponse, Payload, User as UserBase, Validator, } from '../base';
 
-function tokenAuth (profile: Profile.Type): (req: Request, res: Response, next: NextFunction) => Promise<void> {
+function tokenAuth (profile: UserBase.Profile): (req: Request, res: Response, next: NextFunction) => Promise<void> {
 
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
@@ -60,17 +60,25 @@ function tokenAuth (profile: Profile.Type): (req: Request, res: Response, next: 
 
         payload.id = parseInt(payload.id.toString());
 
-        if (await Profile.check(payload.id, profile)) {
+        const checkResult: UserBase.CheckResult = await UserBase.check(payload.id, profile);
 
-          req.userId = payload.id;
-
-          next();
-  
-        } else {
+        if (checkResult == UserBase.CheckResult.NoProfile) {
 
           output.body.message = 'No tienes el perfil de usuario requerido';
 
           res.json(output);
+
+        } else if (checkResult == UserBase.CheckResult.NoEnabled) {
+
+          output.body.message = 'Tu usuario no se encuentra habilitado';
+
+          res.json(output);
+
+        } else {
+
+          req.userId = payload.id;
+
+          next();
 
         }
   

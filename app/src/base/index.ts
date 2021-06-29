@@ -1,11 +1,11 @@
 import { JsonResponse, } from './jsonResponse';
 import { Payload, } from './payload';
-import { Profile, } from './profile';
+import { User, } from './user';
 import { Validator, } from './validator';
 
 export {
   JsonResponse,
   Payload,
-  Profile,
+  User,
   Validator,
 }
