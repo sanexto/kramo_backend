@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import config from '../../config';
-import { JsonResponse, Payload, Validator, } from '../../base';
+import { JsonResponse, Payload, User as UserBase, Validator, } from '../../base';
 import { User, } from '../../models';
 
 class Login {
@@ -56,33 +56,24 @@ class Login {
     };
 
     output.body = {
-      state: 1,
+      state: 2,
       message: '',
       field: {},
     };
 
-    await body('username')
+    await body('profile')
     .exists({ checkNull: true })
-    .withMessage('El campo "Usuario" no existe')
+    .withMessage('El campo "Perfil" no existe')
     .bail()
     .isString()
-    .withMessage('El campo "Usuario" no es una cadena de texto')
+    .withMessage('El campo "Perfil" no es una cadena de texto')
     .bail()
     .trim()
     .notEmpty()
-    .withMessage('Debes ingresar un usuario')
+    .withMessage('El campo "Perfil" está vacío')
     .bail()
-    .run(req);
-
-    await body('password')
-    .exists({ checkNull: true })
-    .withMessage('El campo "Contraseña" no existe')
-    .bail()
-    .isString()
-    .withMessage('El campo "Contraseña" no es una cadena de texto')
-    .bail()
-    .notEmpty()
-    .withMessage('Debes ingresar una contraseña')
+    .isIn(Object.values(UserBase.Profile))
+    .withMessage('El campo "Perfil" no tiene un valor permitido')
     .bail()
     .run(req);
 
@@ -90,56 +81,98 @@ class Login {
 
     if (_.isEmpty(validationError)) {
 
-      const username: string = String(req.body.username);
-      const password: string = String(req.body.password);
+      output.body.state = 1;
 
-      let user: User | null = null;
+      const profile: string = String(req.body.profile);
 
-      try {
+      await body('username')
+      .exists({ checkNull: true })
+      .withMessage('El campo "Usuario" no existe')
+      .bail()
+      .isString()
+      .withMessage('El campo "Usuario" no es una cadena de texto')
+      .bail()
+      .trim()
+      .notEmpty()
+      .withMessage('Debes ingresar un usuario')
+      .bail()
+      .run(req);
 
-        user = await User.findOne(
-          {
-            where: {
-              username: {
-                [Op.eq]: username,
+      await body('password')
+      .exists({ checkNull: true })
+      .withMessage('El campo "Contraseña" no existe')
+      .bail()
+      .isString()
+      .withMessage('El campo "Contraseña" no es una cadena de texto')
+      .bail()
+      .notEmpty()
+      .withMessage('Debes ingresar una contraseña')
+      .bail()
+      .run(req);
+
+      const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+
+      if (_.isEmpty(validationError)) {
+
+        const username: string = String(req.body.username);
+        const password: string = String(req.body.password);
+
+        let user: User | null = null;
+
+        try {
+
+          user = await User.findOne(
+            {
+              where: {
+                username: {
+                  [Op.eq]: username,
+                },
+                profile: {
+                  [Op.eq]: profile,
+                },
               },
             },
-          },
-        );
+          );
 
-      } catch(_) {}
+        } catch(_) {}
 
-      if (user != null) {
+        if (user != null) {
 
-        const match: boolean = await bcrypt.compare(password, user.password);
+          const match: boolean = await bcrypt.compare(password, user.password);
 
-        if (match) {
+          if (match) {
 
-          const payload: Payload = {
-            id: user.id,
-          };
-
-          let token: string | null = null;
-
-          try {
-
-            token = jwt.sign(payload, config.secret);
-            
-          } catch(_) {}
-
-          if (token != null) {
-
-            output.body.state = 3;
-            output.body.message = 'Sesión iniciada con éxito';
-            output.body.session = {
-              token: token,
-              profile: user.profile,
+            const payload: Payload = {
+              id: user.id,
             };
+
+            let token: string | null = null;
+
+            try {
+
+              token = jwt.sign(payload, config.secret);
+              
+            } catch(_) {}
+
+            if (token != null) {
+
+              output.body.state = 3;
+              output.body.message = 'Sesión iniciada con éxito';
+              output.body.session = {
+                token: token,
+              };
+
+            } else {
+
+              output.body.state = 2;
+              output.body.message = 'No se pudo iniciar sesión';
+
+            }
 
           } else {
 
             output.body.state = 2;
-            output.body.message = 'No se pudo iniciar sesión';
+            output.body.message = 'Usuario y/o contraseña incorrectos';
 
           }
 
@@ -152,14 +185,13 @@ class Login {
 
       } else {
 
-        output.body.state = 2;
-        output.body.message = 'Usuario y/o contraseña incorrectos';
+        output.body.field = validationError;
 
       }
 
     } else {
 
-      output.body.field = validationError;
+      output.body.message = validationError[Object.keys(validationError)[0]].message;
 
     }
 
