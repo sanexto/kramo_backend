@@ -5,7 +5,7 @@ import _ from 'lodash';
 import bcrypt from 'bcrypt';
 
 import config from '../../../config';
-import { JsonResponse, Validator, } from '../../../base';
+import { JsonResponse, User as UserBase, Validator, } from '../../../base';
 import { Garage, User, sequelize, } from '../../../models';
 
 class UpdateGarage {
@@ -228,6 +228,9 @@ class UpdateGarage {
                 },
                 username: {
                   [Op.eq]: username,
+                },
+                profile: {
+                  [Op.eq]: UserBase.Profile.Garage,
                 },
               },
             },

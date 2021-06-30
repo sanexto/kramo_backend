@@ -5,7 +5,7 @@ import _ from 'lodash';
 import bcrypt from 'bcrypt';
 
 import config from '../../../config';
-import { JsonResponse, Validator, } from '../../../base';
+import { JsonResponse, User as UserBase, Validator, } from '../../../base';
 import { Admin, User, sequelize, } from '../../../models';
 
 class UpdateAdmin {
@@ -277,6 +277,9 @@ class UpdateAdmin {
                 },
                 username: {
                   [Op.eq]: username,
+                },
+                profile: {
+                  [Op.eq]: UserBase.Profile.Admin,
                 },
               },
             },

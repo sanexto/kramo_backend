@@ -162,6 +162,9 @@ class AddAdmin {
               username: {
                 [Op.eq]: username,
               },
+              profile: {
+                [Op.eq]: UserBase.Profile.Admin,
+              },
             },
           },
         );

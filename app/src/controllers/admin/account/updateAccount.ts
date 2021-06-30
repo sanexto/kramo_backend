@@ -3,7 +3,7 @@ import { body, Meta, validationResult, } from 'express-validator';
 import { Op, Transaction, } from 'sequelize';
 import _ from 'lodash';
 
-import { JsonResponse, Validator, } from '../../../base';
+import { JsonResponse, User as UserBase, Validator, } from '../../../base';
 import { Admin, User, sequelize, } from '../../../models';
 
 class UpdateAccount {
@@ -191,6 +191,9 @@ class UpdateAccount {
               },
               username: {
                 [Op.eq]: username,
+              },
+              profile: {
+                [Op.eq]: UserBase.Profile.Admin,
               },
             },
           },
