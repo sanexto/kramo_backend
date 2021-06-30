@@ -1,6 +1,6 @@
-import { ModelType, Op, } from 'sequelize';
+import { Op, } from 'sequelize';
 
-import { Admin, Garage, User as UserModel, } from '../models';
+import { User as UserModel, } from '../models';
 
 namespace User {
 
@@ -21,29 +21,6 @@ namespace User {
 
   export async function check(userId: number, profile: Profile): Promise<CheckResult> {
 
-    let model: ModelType | null = null;
-
-    switch (profile) {
-
-      case Profile.Admin: {
-
-        model = Admin;
-
-        break;
-
-      }
-      case Profile.Garage: {
-
-        model = Garage;
-
-        break;
-
-      }
-
-    }
-
-    if (model == null) throw new Error('Invalid user profile');
-
     let result: CheckResult = CheckResult.NotExist;
     let user: UserModel | null = null;
 
@@ -51,15 +28,12 @@ namespace User {
 
       user = await UserModel.findOne(
         {
-          include: [
-            {
-              model: model,
-              required: true,
-            },
-          ],
           where: {
             id: {
               [Op.eq]: userId,
+            },
+            profile: {
+              [Op.eq]: profile,
             },
           },
         },
