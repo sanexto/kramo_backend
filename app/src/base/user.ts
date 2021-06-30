@@ -43,13 +43,13 @@ namespace User {
 
     if (user != null) {
 
-      if (user.enabled != null && user.enabled == true) {
+      if (user.enabled == null || user.enabled == false) {
 
-        result = CheckResult.Ok;
+        result = CheckResult.NotEnabled;
 
       } else {
 
-        result = CheckResult.NotEnabled;
+        result = CheckResult.Ok;
 
       }
 
