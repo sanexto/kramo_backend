@@ -13,8 +13,8 @@ namespace User {
 
   export enum CheckResult {
 
-    NoProfile = 1,
-    NoEnabled,
+    NotExist = 1,
+    NotEnabled,
     Ok,
     
   }
@@ -44,7 +44,7 @@ namespace User {
 
     if (model == null) throw new Error('Invalid user profile');
 
-    let result: CheckResult = CheckResult.NoProfile;
+    let result: CheckResult = CheckResult.NotExist;
     let user: UserModel | null = null;
 
     try {
@@ -75,7 +75,7 @@ namespace User {
 
       } else {
 
-        result = CheckResult.NoEnabled;
+        result = CheckResult.NotEnabled;
 
       }
 

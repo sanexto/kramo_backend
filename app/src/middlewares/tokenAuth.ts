@@ -7,7 +7,7 @@ import validator from 'validator';
 import config from '../config';
 import { JsonResponse, Payload, User as UserBase, Validator, } from '../base';
 
-function tokenAuth (profile: UserBase.Profile): (req: Request, res: Response, next: NextFunction) => Promise<void> {
+function tokenAuth(profile: UserBase.Profile): (req: Request, res: Response, next: NextFunction) => Promise<void> {
 
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
@@ -56,21 +56,21 @@ function tokenAuth (profile: UserBase.Profile): (req: Request, res: Response, ne
   
       if (payload != null && 'id' in payload && validator.isInt(payload.id.toString(), { min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })) {
 
-        output.status = JsonResponse.Status.Forbidden;
-
         payload.id = parseInt(payload.id.toString());
 
         const checkResult: UserBase.CheckResult = await UserBase.check(payload.id, profile);
 
-        if (checkResult == UserBase.CheckResult.NoProfile) {
+        if (checkResult == UserBase.CheckResult.NotExist) {
 
-          output.body.message = 'No tienes el perfil de usuario requerido';
+          output.body.message = 'Tu usuario no existe';
 
           res.json(output);
 
-        } else if (checkResult == UserBase.CheckResult.NoEnabled) {
+        } else if (checkResult == UserBase.CheckResult.NotEnabled) {
 
-          output.body.message = 'Tu usuario no se encuentra habilitado';
+          output.status = JsonResponse.Status.Forbidden;
+
+          output.body.message = 'Tu usuario no está habilitado';
 
           res.json(output);
 
