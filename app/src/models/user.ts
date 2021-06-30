@@ -25,7 +25,6 @@ class User extends Model {
         username: {
           type: DataTypes.STRING({ length: 255 }),
           allowNull: false,
-          unique: true,
         },
         password: {
           type: DataTypes.STRING({ length: 255 }),
