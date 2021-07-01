@@ -8,7 +8,7 @@ WORKDIR /app
 # ---------- Development ----------
 FROM base AS development
 
-COPY ./package.json ./package-lock.json ./tsconfig.json ./.sequelizerc ./
 COPY ./node_modules ./node_modules
+COPY ./package.json ./tsconfig.json ./.sequelizerc ./
 
 CMD npm run watch
