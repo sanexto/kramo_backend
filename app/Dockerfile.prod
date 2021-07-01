@@ -16,8 +16,8 @@ RUN npm install --only=prod && cp -R ./node_modules ./node_modules_prod && npm i
 # ---------- Production ----------
 FROM base AS production
 
+COPY ./.sequelizerc ./
 COPY --from=building /app/node_modules_prod ./node_modules
 COPY --from=building /app/dist ./dist
-COPY ./.sequelizerc ./
 
 CMD node ./dist/bin/www.js
