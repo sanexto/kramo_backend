@@ -49,6 +49,11 @@ class Signup {
               reveal: false,
             },
           },
+          button: {
+            signup: {
+              label: 'Registrarme',
+            },
+          },
         },
       },
     };
