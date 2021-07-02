@@ -164,8 +164,7 @@ class UpdatePassword {
     if (_.isEmpty(validationError)) {
 
       const repeatNewPassword: string = String(req.body.repeatNewPassword);
-
-      const hash = await bcrypt.hash(repeatNewPassword, await bcrypt.genSalt());
+      const passwordHash = await bcrypt.hash(repeatNewPassword, await bcrypt.genSalt());
 
       let updatedPassword: boolean = false;
       const transaction: Transaction = await sequelize.transaction();
@@ -174,7 +173,7 @@ class UpdatePassword {
 
         await User.update(
           {
-            password: hash,
+            password: passwordHash,
           },
           {
             where: {

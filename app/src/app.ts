@@ -5,10 +5,9 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import sleep from 'sleep';
 
-import { JsonResponse, User as UserBase, } from './base';
+import { JsonResponse, } from './base';
 import { sequelize, } from './models';
-import { tokenAuth, } from './middlewares';
-import { Auth as AuthRouter, Admin as AdminRouter, Garage as GarageRouter, } from './routes';
+import { Admin as AdminRouter, Garage as GarageRouter, } from './routes';
 
 const app: Application = express();
 
@@ -43,9 +42,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/auth', AuthRouter);
-app.use('/admin', tokenAuth(UserBase.Profile.Admin), AdminRouter);
-app.use('/garage', tokenAuth(UserBase.Profile.Garage), GarageRouter);
+app.use('/admin', AdminRouter);
+app.use('/garage', GarageRouter);
 
 // catch 404 and forward to error handler
 app.use((req: Request, res: Response, next: NextFunction): void => {
