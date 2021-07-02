@@ -447,4 +447,4 @@ class UpdateBooking {
 
 export {
   UpdateBooking,
-}
+};

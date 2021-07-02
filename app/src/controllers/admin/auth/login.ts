@@ -173,4 +173,4 @@ class Login {
 
 export {
   Login,
-}
+};

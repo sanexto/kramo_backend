@@ -365,4 +365,4 @@ class UpdateGarage {
 
 export {
   UpdateGarage,
-}
+};

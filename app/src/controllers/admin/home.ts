@@ -87,4 +87,4 @@ class Home {
 
 export {
   Home,
-}
+};

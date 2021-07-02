@@ -110,4 +110,4 @@ class ViewGarage {
 
 export {
   ViewGarage,
-}
+};

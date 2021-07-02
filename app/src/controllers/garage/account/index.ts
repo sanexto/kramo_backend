@@ -4,4 +4,4 @@ import { UpdatePassword, } from './updatePassword';
 export {
   UpdateAccount,
   UpdatePassword,
-}
+};

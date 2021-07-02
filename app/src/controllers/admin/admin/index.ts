@@ -12,4 +12,4 @@ export {
   AddAdmin,
   UpdateAdmin,
   DeleteAdmin,
-}
+};

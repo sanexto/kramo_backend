@@ -6,4 +6,4 @@ interface Payload {
 
 export {
   Payload,
-}
+};

@@ -66,4 +66,4 @@ class Admin extends Model {
 
 export {
   Admin,
-}
+};

@@ -194,4 +194,4 @@ class DeleteBooking {
 
 export {
   DeleteBooking,
-}
+};

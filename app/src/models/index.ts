@@ -33,4 +33,4 @@ export {
   Garage,
   User,
   sequelize,
-}
+};

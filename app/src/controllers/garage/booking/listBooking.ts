@@ -341,4 +341,4 @@ class ListBooking {
 
 export {
   ListBooking,
-}
+};

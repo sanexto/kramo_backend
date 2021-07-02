@@ -183,4 +183,4 @@ class DeleteGarage {
 
 export {
   DeleteGarage,
-}
+};

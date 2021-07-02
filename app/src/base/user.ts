@@ -63,4 +63,4 @@ namespace User {
 
 export {
   User,
-}
+};

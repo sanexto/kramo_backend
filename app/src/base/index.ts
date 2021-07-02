@@ -8,4 +8,4 @@ export {
   Payload,
   User,
   Validator,
-}
+};

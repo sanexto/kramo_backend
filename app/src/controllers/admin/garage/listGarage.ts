@@ -226,4 +226,4 @@ class ListGarage {
 
 export {
   ListGarage,
-}
+};

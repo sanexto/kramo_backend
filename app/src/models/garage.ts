@@ -70,4 +70,4 @@ class Garage extends Model {
 
 export {
   Garage,
-}
+};

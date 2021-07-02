@@ -243,4 +243,4 @@ class ListAdmin {
 
 export {
   ListAdmin,
-}
+};

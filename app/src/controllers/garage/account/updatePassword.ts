@@ -218,4 +218,4 @@ class UpdatePassword {
 
 export {
   UpdatePassword,
-}
+};

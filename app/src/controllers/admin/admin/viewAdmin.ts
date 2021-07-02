@@ -128,4 +128,4 @@ class ViewAdmin {
 
 export {
   ViewAdmin,
-}
+};

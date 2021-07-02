@@ -10,4 +10,4 @@ export {
   AddBooking,
   UpdateBooking,
   DeleteBooking,
-}
+};

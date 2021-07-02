@@ -20,4 +20,4 @@ namespace JsonResponse {
 
 export {
   JsonResponse,
-}
+};

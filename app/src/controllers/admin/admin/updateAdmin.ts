@@ -416,4 +416,4 @@ class UpdateAdmin {
 
 export {
   UpdateAdmin,
-}
+};

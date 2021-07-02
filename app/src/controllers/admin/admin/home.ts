@@ -107,4 +107,4 @@ class Home {
 
 export {
   Home,
-}
+};

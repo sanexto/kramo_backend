@@ -121,4 +121,4 @@ class ViewBooking {
 
 export {
   ViewBooking,
-}
+};

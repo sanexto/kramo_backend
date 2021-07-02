@@ -104,4 +104,4 @@ function tokenAuth(profile: UserBase.Profile): (req: Request, res: Response, nex
 
 export {
   tokenAuth,
-}
+};

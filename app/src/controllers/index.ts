@@ -4,4 +4,4 @@ import * as Garage from './garage';
 export {
   Admin,
   Garage,
-}
+};

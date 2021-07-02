@@ -211,4 +211,4 @@ class DeleteAdmin {
 
 export {
   DeleteAdmin,
-}
+};

@@ -280,4 +280,4 @@ class Signup {
 
 export {
   Signup,
-}
+};

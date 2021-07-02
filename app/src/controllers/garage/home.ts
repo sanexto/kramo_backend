@@ -175,4 +175,4 @@ class Home {
 
 export {
   Home,
-}
+};

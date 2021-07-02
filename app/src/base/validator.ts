@@ -20,4 +20,4 @@ namespace Validator {
 
 export {
   Validator,
-}
+};

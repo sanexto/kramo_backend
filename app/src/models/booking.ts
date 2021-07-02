@@ -65,4 +65,4 @@ class Booking extends Model {
 
 export {
   Booking,
-}
+};

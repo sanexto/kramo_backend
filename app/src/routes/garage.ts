@@ -29,4 +29,4 @@ router.post('/auth/signup', GarageController.Auth.Signup.post);
 
 export {
   router as Garage,
-}
+};

@@ -38,4 +38,4 @@ router.post('/auth/login', AdminController.Auth.Login.post);
 
 export {
   router as Admin,
-}
+};

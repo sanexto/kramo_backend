@@ -8,4 +8,4 @@ export {
   Booking,
   Account,
   Auth,
-}
+};

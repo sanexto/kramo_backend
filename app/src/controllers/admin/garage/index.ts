@@ -12,4 +12,4 @@ export {
   AddGarage,
   UpdateGarage,
   DeleteGarage,
-}
+};

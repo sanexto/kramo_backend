@@ -268,4 +268,4 @@ class UpdateAccount {
 
 export {
   UpdateAccount,
-}
+};

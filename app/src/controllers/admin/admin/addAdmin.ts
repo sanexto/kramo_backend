@@ -285,4 +285,4 @@ class AddAdmin {
 
 export {
   AddAdmin,
-}
+};
