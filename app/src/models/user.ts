@@ -40,6 +40,12 @@ class User extends Model {
         },
       },
       {
+        indexes: [
+          {
+            fields: ['username', 'profile'],
+            unique: true,
+          },
+        ],
         name: {
           singular: 'User',
           plural: 'Users',
