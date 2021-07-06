@@ -3,8 +3,10 @@ import { body, Meta, validationResult, } from 'express-validator';
 import { Op, Transaction, } from 'sequelize';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-import { JsonResponse, User as UserBase, Validator, } from '../../../base';
+import config from '../../../config';
+import { JsonResponse, Payload, User as UserBase, Validator, } from '../../../base';
 import { Garage, User, sequelize, } from '../../../models';
 
 class Signup {
@@ -17,7 +19,7 @@ class Signup {
     };
 
     output.body = {
-      title: '',
+      title: 'Crear cuenta',
       form: {
         signup: {
           field: {
@@ -217,7 +219,7 @@ class Signup {
       const repeatPassword: string = String(req.body.repeatPassword);
       const passwordHash: string = await bcrypt.hash(repeatPassword, await bcrypt.genSalt());
 
-      let addedGarage: boolean = false;
+      let token: string | null = null;
       const transaction: Transaction = await sequelize.transaction();
 
       try {
@@ -245,8 +247,25 @@ class Signup {
           },
         );
 
-        await transaction.commit();
-        addedGarage = true;
+        const payload: Payload = {
+          id: user.id,
+        };
+
+        try {
+
+          token = jwt.sign(payload, config.secret);
+          
+        } catch(_) {}
+
+        if (token != null) {
+
+          await transaction.commit();
+
+        } else {
+
+          await transaction.rollback();
+
+        }
 
       } catch(_) {
 
@@ -254,15 +273,18 @@ class Signup {
 
       }
 
-      if (addedGarage) {
+      if (token != null) {
 
         output.body.state = 3;
-        output.body.message = 'Cochera agregada con éxito';
+        output.body.message = 'Cuenta creada con éxito';
+        output.body.session = {
+          token: token,
+        };
 
       } else {
 
         output.body.state = 2;
-        output.body.message = 'No se pudo agregar la cochera';
+        output.body.message = 'No se pudo crear la cuenta';
 
       }
 
