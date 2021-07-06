@@ -13,9 +13,9 @@ class Admin extends Model {
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  public User: any;
+  public User!: any;
 
-  public static initialize (sequelize: Sequelize): void {
+  public static initialize(sequelize: Sequelize): void {
 
     Admin.init(
       {
@@ -49,9 +49,10 @@ class Admin extends Model {
 
   }
 
-  public static associate (models: Record<string, any>): void {
+  public static associate(models: Record<string, any>): void {
 
     Admin.belongsTo(models.User, {
+      targetKey: 'id',
       foreignKey: {
         name: 'userId',
         allowNull: false,

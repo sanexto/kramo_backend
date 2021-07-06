@@ -13,7 +13,7 @@ class User extends Model {
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  public static initialize (sequelize: Sequelize): void {
+  public static initialize(sequelize: Sequelize): void {
 
     User.init(
       {
@@ -57,9 +57,10 @@ class User extends Model {
 
   }
 
-  public static associate (models: Record<string, any>): void {
+  public static associate(models: Record<string, any>): void {
 
     User.hasOne(models.Admin, {
+      sourceKey: 'id',
       foreignKey: {
         name: 'userId',
         allowNull: false,
@@ -69,6 +70,7 @@ class User extends Model {
     });
 
     User.hasOne(models.Garage, {
+      sourceKey: 'id',
       foreignKey: {
         name: 'userId',
         allowNull: false,

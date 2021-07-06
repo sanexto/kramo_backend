@@ -12,9 +12,9 @@ class Garage extends Model {
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  public User: any;
+  public User!: any;
 
-  public static initialize (sequelize: Sequelize): void {
+  public static initialize(sequelize: Sequelize): void {
 
     Garage.init(
       {
@@ -44,9 +44,10 @@ class Garage extends Model {
 
   }
 
-  public static associate (models: Record<string, any>): void {
+  public static associate(models: Record<string, any>): void {
 
     Garage.belongsTo(models.User, {
+      targetKey: 'id',
       foreignKey: {
         name: 'userId',
         allowNull: false,
@@ -56,6 +57,7 @@ class Garage extends Model {
     });
 
     Garage.hasMany(models.Booking, {
+      sourceKey: 'id',
       foreignKey: {
         name: 'garageId',
         allowNull: false,

@@ -7,14 +7,15 @@ class Booking extends Model {
   public id!: number;
   public vehiclePlate!: string;
   public vehicleEntry!: Date;
-  public vehicleExit!: Date;
+  public vehicleExit!: Date | null;
+  public garageId!: number;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  public Garage: any;
+  public Garage!: any;
 
-  public static initialize (sequelize: Sequelize): void {
+  public static initialize(sequelize: Sequelize): void {
 
     Booking.init(
       {
@@ -48,9 +49,10 @@ class Booking extends Model {
 
   }
 
-  public static associate (models: Record<string, any>): void {
+  public static associate(models: Record<string, any>): void {
 
     Booking.belongsTo(models.Garage, {
+      targetKey: 'id',
       foreignKey: {
         name: 'garageId',
         allowNull: false,

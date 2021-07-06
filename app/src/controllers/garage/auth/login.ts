@@ -19,7 +19,7 @@ class Login {
     };
 
     output.body = {
-      title: 'Hola!',
+      title: 'Bienvenido',
       form: {
         login: {
           field: {
@@ -38,6 +38,9 @@ class Login {
           button: {
             login: {
               label: 'Ingresar',
+            },
+            signup: {
+              label: 'Crear cuenta',
             },
           },
         },
