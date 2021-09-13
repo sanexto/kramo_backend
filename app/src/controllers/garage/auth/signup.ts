@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, } from 'express';
 import { body, Meta, validationResult, } from 'express-validator';
-import { Op, Transaction, } from 'sequelize';
+import { Transaction, } from 'sequelize';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -142,12 +142,8 @@ class Signup {
         usersAmount = await User.count(
           {
             where: {
-              username: {
-                [Op.eq]: username,
-              },
-              profile: {
-                [Op.eq]: UserBase.Profile.Garage,
-              },
+              username: username,
+              profile: UserBase.Profile.Garage,
             },
           },
         );

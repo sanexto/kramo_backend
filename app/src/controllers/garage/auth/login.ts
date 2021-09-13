@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response, } from 'express';
 import { body, validationResult, } from 'express-validator';
-import { Op, } from 'sequelize';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -103,12 +102,8 @@ class Login {
         user = await User.findOne(
           {
             where: {
-              username: {
-                [Op.eq]: username,
-              },
-              profile: {
-                [Op.eq]: UserBase.Profile.Garage,
-              },
+              username: username,
+              profile: UserBase.Profile.Garage,
             },
           },
         );

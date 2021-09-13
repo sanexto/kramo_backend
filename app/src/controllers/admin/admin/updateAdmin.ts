@@ -68,9 +68,7 @@ class UpdateAdmin {
                 model: User,
                 required: true,
                 where: {
-                  id: {
-                    [Op.eq]: userId,
-                  },
+                  id: userId,
                 },
               },
             ],
@@ -275,12 +273,8 @@ class UpdateAdmin {
                 id: {
                   [Op.not]: userId,
                 },
-                username: {
-                  [Op.eq]: username,
-                },
-                profile: {
-                  [Op.eq]: UserBase.Profile.Admin,
-                },
+                username: username,
+                profile: UserBase.Profile.Admin,
               },
             },
           );

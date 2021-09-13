@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response, } from 'express';
 import { body, Meta, param, validationResult, } from 'express-validator';
-import { Op, Transaction, } from 'sequelize';
+import { Transaction, } from 'sequelize';
 import _ from 'lodash';
 import moment from 'moment';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
-import { Booking, Garage, User, sequelize, } from '../../../models';
+import { Garage, Parking, User, sequelize, } from '../../../models';
 
-class UpdateBooking {
+class UpdateParking {
 
   public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
 
@@ -24,15 +24,15 @@ class UpdateBooking {
       },
     };
 
-    await param('bookingId')
+    await param('parkingId')
     .exists({ checkNull: true })
-    .withMessage('El campo "ID de reserva" no existe')
+    .withMessage('El campo "ID de aparcamiento" no existe')
     .bail()
     .isInt({ allow_leading_zeroes: false })
-    .withMessage('El campo "ID de reserva" no es un número entero')
+    .withMessage('El campo "ID de aparcamiento" no es un número entero')
     .bail()
     .isInt({ min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })
-    .withMessage(`El campo "ID de reserva" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
+    .withMessage(`El campo "ID de aparcamiento" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
     .bail()
     .toInt()
     .run(req);
@@ -41,13 +41,13 @@ class UpdateBooking {
 
     if (_.isEmpty(validationError)) {
 
-      const bookingId: number = Number(req.params.bookingId);
+      const parkingId: number = Number(req.params.parkingId);
 
-      let booking: Booking | null = null;
+      let parking: Parking | null = null;
 
       try {
 
-        booking = await Booking.findOne(
+        parking = await Parking.findOne(
           {
             include: [
               {
@@ -58,36 +58,32 @@ class UpdateBooking {
                     model: User,
                     required: true,
                     where: {
-                      id: {
-                        [Op.eq]: req.userId,
-                      },
+                      id: req.userId,
                     },
                   },
                 ],
               },
             ],
             where: {
-              id: {
-                [Op.eq]: bookingId,
-              },
+              id: parkingId,
             },
           },
         );
 
       } catch(_) {}
 
-      if (booking != null) {
+      if (parking != null) {
 
         output.body = {
           state: 2,
-          title: 'Modificar reserva',
+          title: 'Modificar aparcamiento',
           form: {
-            updateBooking: {
+            updateParking: {
               field: {
                 vehiclePlate: {
                   label: 'Matrícula del vehículo',
                   hint: '',
-                  value: booking.vehiclePlate ?? '',
+                  value: parking.vehiclePlate ?? '',
                 },
               },
               fieldSet: {
@@ -97,13 +93,13 @@ class UpdateBooking {
                     date: {
                       label: 'Fecha',
                       hint: 'Seleccionar',
-                      value: moment(booking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D') : '',
+                      value: moment(parking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleEntry).format('YYYY/M/D') : '',
                       pickerHint: 'DD/MM/AAAA',
                     },
                     time: {
                       label: 'Hora',
                       hint: 'Seleccionar',
-                      value: moment(booking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleEntry).format('H:m') : '',
+                      value: moment(parking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleEntry).format('H:m') : '',
                       pickerHint: 'HH:MM',
                     },
                   },
@@ -114,13 +110,13 @@ class UpdateBooking {
                     date: {
                       label: 'Fecha',
                       hint: 'Seleccionar',
-                      value: moment(booking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D') : '',
+                      value: moment(parking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleExit).format('YYYY/M/D') : '',
                       pickerHint: 'DD/MM/AAAA',
                     },
                     time: {
                       label: 'Hora',
                       hint: 'Seleccionar',
-                      value: moment(booking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleExit).format('H:m') : '',
+                      value: moment(parking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleExit).format('H:m') : '',
                       pickerHint: 'HH:MM',
                     },
                   },
@@ -137,7 +133,7 @@ class UpdateBooking {
 
       } else {
 
-        output.body.error.message = 'La reserva solicitada no existe';
+        output.body.error.message = 'El aparcamiento solicitado no existe';
 
       }
 
@@ -164,15 +160,15 @@ class UpdateBooking {
       field: {},
     };
 
-    await param('bookingId')
+    await param('parkingId')
     .exists({ checkNull: true })
-    .withMessage('El campo "ID de reserva" no existe')
+    .withMessage('El campo "ID de aparcamiento" no existe')
     .bail()
     .isInt({ allow_leading_zeroes: false })
-    .withMessage('El campo "ID de reserva" no es un número entero')
+    .withMessage('El campo "ID de aparcamiento" no es un número entero')
     .bail()
     .isInt({ min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })
-    .withMessage(`El campo "ID de reserva" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
+    .withMessage(`El campo "ID de aparcamiento" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
     .bail()
     .toInt()
     .run(req);
@@ -183,7 +179,7 @@ class UpdateBooking {
 
       output.body.state = 1;
 
-      const bookingId: number = Number(req.params.bookingId);
+      const parkingId: number = Number(req.params.parkingId);
 
       await body('vehiclePlate')
       .exists({ checkNull: true })
@@ -355,7 +351,7 @@ class UpdateBooking {
           const vehicleEntry: Date = new Date(`${req.body.vehicleEntryDate} ${req.body.vehicleEntryTime}`);
           const vehicleExit: Date | null = _.isEmpty(req.body.vehicleExitDate) && _.isEmpty(req.body.vehicleExitTime) ? null : new Date(`${req.body.vehicleExitDate} ${req.body.vehicleExitTime}`);
 
-          let updatedBooking: boolean = false;
+          let updatedParking: boolean = false;
           const transaction: Transaction = await sequelize.transaction();
 
           try {
@@ -367,9 +363,7 @@ class UpdateBooking {
                     model: User,
                     required: true,
                     where: {
-                      id: {
-                        [Op.eq]: req.userId,
-                      },
+                      id: req.userId,
                     },
                   },
                 ],
@@ -379,7 +373,7 @@ class UpdateBooking {
   
             if (garage != null) {
 
-              await Booking.update(
+              await Parking.update(
                 {
                   vehiclePlate,
                   vehicleEntry,
@@ -387,7 +381,7 @@ class UpdateBooking {
                 },
                 {
                   where: {
-                    id: bookingId,
+                    id: parkingId,
                     garageId: garage.id,
                   },
                   transaction: transaction,
@@ -395,7 +389,7 @@ class UpdateBooking {
               );
     
               await transaction.commit();
-              updatedBooking = true;
+              updatedParking = true;
   
             } else {
   
@@ -409,15 +403,15 @@ class UpdateBooking {
   
           }
 
-          if (updatedBooking) {
+          if (updatedParking) {
 
             output.body.state = 3;
-            output.body.message = 'Reserva modificada con éxito';
+            output.body.message = 'Aparcamiento modificado con éxito';
   
           } else {
   
             output.body.state = 2;
-            output.body.message = 'No se pudo modificar la reserva';
+            output.body.message = 'No se pudo modificar el aparcamiento';
   
           }
 
@@ -446,5 +440,5 @@ class UpdateBooking {
 }
 
 export {
-  UpdateBooking,
+  UpdateParking,
 };

@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response, } from 'express';
 import { param, validationResult, } from 'express-validator';
-import { Op, Transaction, } from 'sequelize';
+import { Transaction, } from 'sequelize';
 import _ from 'lodash';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
-import { Booking, Garage, User, sequelize, } from '../../../models';
+import { Garage, Parking, User, sequelize, } from '../../../models';
 
-class DeleteBooking {
+class DeleteParking {
 
   public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
 
@@ -23,15 +23,15 @@ class DeleteBooking {
       },
     };
 
-    await param('bookingId')
+    await param('parkingId')
     .exists({ checkNull: true })
-    .withMessage('El campo "ID de reserva" no existe')
+    .withMessage('El campo "ID de aparcamiento" no existe')
     .bail()
     .isInt({ allow_leading_zeroes: false })
-    .withMessage('El campo "ID de reserva" no es un número entero')
+    .withMessage('El campo "ID de aparcamiento" no es un número entero')
     .bail()
     .isInt({ min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })
-    .withMessage(`El campo "ID de reserva" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
+    .withMessage(`El campo "ID de aparcamiento" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
     .bail()
     .toInt()
     .run(req);
@@ -40,13 +40,13 @@ class DeleteBooking {
 
     if (_.isEmpty(validationError)) {
 
-      const bookingId: number = Number(req.params.bookingId);
+      const parkingId: number = Number(req.params.parkingId);
 
-      let booking: Booking | null = null;
+      let parking: Parking | null = null;
 
       try {
 
-        booking = await Booking.findOne(
+        parking = await Parking.findOne(
           {
             include: [
               {
@@ -57,32 +57,28 @@ class DeleteBooking {
                     model: User,
                     required: true,
                     where: {
-                      id: {
-                        [Op.eq]: req.userId,
-                      },
+                      id: req.userId,
                     },
                   },
                 ],
               },
             ],
             where: {
-              id: {
-                [Op.eq]: bookingId,
-              },
+              id: parkingId,
             },
           },
         );
 
       } catch(_) {}
 
-      if (booking != null) {
+      if (parking != null) {
 
         output.body = {
           state: 2,
-          title: 'Eliminar reserva',
-          content: `¿Está seguro que desea eliminar la reserva #${booking.id ?? 0}?`,
+          title: 'Eliminar aparcamiento',
+          content: `¿Está seguro que desea eliminar el aparcamiento #${parking.id ?? 0}?`,
           form: {
-            deleteBooking: {
+            deleteParking: {
               button: {
                 cancel: {
                   label: 'Cancelar',
@@ -97,7 +93,7 @@ class DeleteBooking {
 
       } else {
 
-        output.body.error.message = 'La reserva solicitada no existe';
+        output.body.error.message = 'El aparcamiento solicitado no existe';
 
       }
 
@@ -124,15 +120,15 @@ class DeleteBooking {
       field: {},
     };
 
-    await param('bookingId')
+    await param('parkingId')
     .exists({ checkNull: true })
-    .withMessage('El campo "ID de reserva" no existe')
+    .withMessage('El campo "ID de aparcamiento" no existe')
     .bail()
     .isInt({ allow_leading_zeroes: false })
-    .withMessage('El campo "ID de reserva" no es un número entero')
+    .withMessage('El campo "ID de aparcamiento" no es un número entero')
     .bail()
     .isInt({ min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })
-    .withMessage(`El campo "ID de reserva" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
+    .withMessage(`El campo "ID de aparcamiento" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
     .bail()
     .toInt()
     .run(req);
@@ -143,24 +139,24 @@ class DeleteBooking {
 
       output.body.state = 1;
 
-      const bookingId: number = Number(req.params.bookingId);
+      const parkingId: number = Number(req.params.parkingId);
 
-      let deletedBooking: boolean = false;
+      let deletedParking: boolean = false;
       const transaction: Transaction = await sequelize.transaction();
 
       try {
 
-        await Booking.destroy(
+        await Parking.destroy(
           {
             where: {
-              id: bookingId,
+              id: parkingId,
             },
             transaction: transaction,
           },
         );
 
         await transaction.commit();
-        deletedBooking = true;
+        deletedParking = true;
 
       } catch (_) {
 
@@ -168,15 +164,15 @@ class DeleteBooking {
 
       }
 
-      if (deletedBooking) {
+      if (deletedParking) {
 
         output.body.state = 3;
-        output.body.message = 'Reserva eliminada con éxito';
+        output.body.message = 'Aparcamiento eliminado con éxito';
 
       } else {
 
         output.body.state = 2;
-        output.body.message = 'No se pudo eliminar la reserva';
+        output.body.message = 'No se pudo eliminar el aparcamiento';
 
       }
 
@@ -193,5 +189,5 @@ class DeleteBooking {
 }
 
 export {
-  DeleteBooking,
+  DeleteParking,
 };

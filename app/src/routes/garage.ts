@@ -8,14 +8,14 @@ const router: Router = express.Router();
 
 router.get('/', tokenAuth(UserBase.Profile.Garage), GarageController.Home.get);
 
-router.get('/booking/list', tokenAuth(UserBase.Profile.Garage), GarageController.Booking.ListBooking.get);
-router.get('/booking/list/:bookingId', tokenAuth(UserBase.Profile.Garage), GarageController.Booking.ViewBooking.get);
-router.get('/booking/add', tokenAuth(UserBase.Profile.Garage), GarageController.Booking.AddBooking.get);
-router.post('/booking/add', tokenAuth(UserBase.Profile.Garage), GarageController.Booking.AddBooking.post);
-router.get('/booking/update/:bookingId', tokenAuth(UserBase.Profile.Garage), GarageController.Booking.UpdateBooking.get);
-router.put('/booking/update/:bookingId', tokenAuth(UserBase.Profile.Garage), GarageController.Booking.UpdateBooking.put);
-router.get('/booking/delete/:bookingId', tokenAuth(UserBase.Profile.Garage), GarageController.Booking.DeleteBooking.get);
-router.delete('/booking/delete/:bookingId', tokenAuth(UserBase.Profile.Garage), GarageController.Booking.DeleteBooking.delete);
+router.get('/parking/list', tokenAuth(UserBase.Profile.Garage), GarageController.Parking.ListParking.get);
+router.get('/parking/list/:parkingId', tokenAuth(UserBase.Profile.Garage), GarageController.Parking.ViewParking.get);
+router.get('/parking/add', tokenAuth(UserBase.Profile.Garage), GarageController.Parking.AddParking.get);
+router.post('/parking/add', tokenAuth(UserBase.Profile.Garage), GarageController.Parking.AddParking.post);
+router.get('/parking/update/:parkingId', tokenAuth(UserBase.Profile.Garage), GarageController.Parking.UpdateParking.get);
+router.put('/parking/update/:parkingId', tokenAuth(UserBase.Profile.Garage), GarageController.Parking.UpdateParking.put);
+router.get('/parking/delete/:parkingId', tokenAuth(UserBase.Profile.Garage), GarageController.Parking.DeleteParking.get);
+router.delete('/parking/delete/:parkingId', tokenAuth(UserBase.Profile.Garage), GarageController.Parking.DeleteParking.delete);
 
 router.get('/account/update', tokenAuth(UserBase.Profile.Garage), GarageController.Account.UpdateAccount.get);
 router.put('/account/update', tokenAuth(UserBase.Profile.Garage), GarageController.Account.UpdateAccount.put);

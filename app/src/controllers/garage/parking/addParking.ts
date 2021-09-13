@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response, } from 'express';
 import { body, Meta, validationResult, } from 'express-validator';
-import { Op, Transaction, } from 'sequelize';
+import { Transaction, } from 'sequelize';
 import _ from 'lodash';
 import moment from 'moment';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
-import { Booking, Garage, User, sequelize, } from '../../../models';
+import { Garage, Parking, User, sequelize, } from '../../../models';
 
-class AddBooking {
+class AddParking {
 
   public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
 
@@ -18,9 +18,9 @@ class AddBooking {
     };
 
     output.body = {
-      title: 'Nueva reserva',
+      title: 'Nuevo aparcamiento',
       form: {
-        addBooking: {
+        addParking: {
           field: {
             vehiclePlate: {
               label: 'Matrícula del vehículo',
@@ -260,7 +260,7 @@ class AddBooking {
         const vehicleEntry: Date = new Date(`${req.body.vehicleEntryDate} ${req.body.vehicleEntryTime}`);
         const vehicleExit: Date | null = _.isEmpty(req.body.vehicleExitDate) && _.isEmpty(req.body.vehicleExitTime) ? null : new Date(`${req.body.vehicleExitDate} ${req.body.vehicleExitTime}`);
 
-        let addedBooking: boolean = false;
+        let addedParking: boolean = false;
         const transaction: Transaction = await sequelize.transaction();
 
         try {
@@ -272,9 +272,7 @@ class AddBooking {
                   model: User,
                   required: true,
                   where: {
-                    id: {
-                      [Op.eq]: req.userId,
-                    },
+                    id: req.userId,
                   },
                 },
               ],
@@ -284,7 +282,7 @@ class AddBooking {
 
           if (garage != null) {
 
-            await Booking.create(
+            await Parking.create(
               {
                 vehiclePlate,
                 vehicleEntry,
@@ -297,7 +295,7 @@ class AddBooking {
             );
 
             await transaction.commit();
-            addedBooking = true;
+            addedParking = true;
 
           } else {
 
@@ -311,15 +309,15 @@ class AddBooking {
 
         }
 
-        if (addedBooking) {
+        if (addedParking) {
 
           output.body.state = 3;
-          output.body.message = 'Reserva agregada con éxito';
+          output.body.message = 'Aparcamiento agregado con éxito';
 
         } else {
 
           output.body.state = 2;
-          output.body.message = 'No se pudo agregar la reserva';
+          output.body.message = 'No se pudo agregar el aparcamiento';
 
         }
 
@@ -342,5 +340,5 @@ class AddBooking {
 }
 
 export {
-  AddBooking,
+  AddParking,
 };

@@ -1,5 +1,3 @@
-import { Op, } from 'sequelize';
-
 import { User as UserModel, } from '../models';
 
 namespace User {
@@ -29,12 +27,8 @@ namespace User {
       user = await UserModel.findOne(
         {
           where: {
-            id: {
-              [Op.eq]: userId,
-            },
-            profile: {
-              [Op.eq]: profile,
-            },
+            id: userId,
+            profile: profile,
           },
         },
       );

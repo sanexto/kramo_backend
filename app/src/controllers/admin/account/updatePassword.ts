@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, } from 'express';
 import { body, Meta, validationResult, } from 'express-validator';
-import { Op, Transaction, } from 'sequelize';
+import { Transaction, } from 'sequelize';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
 
@@ -85,9 +85,7 @@ class UpdatePassword {
         user = await User.findOne(
           {
             where: {
-              id: {
-                [Op.eq]: req.userId,
-              },
+              id: req.userId,
             },
           },
         );

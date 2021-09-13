@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response, } from 'express';
 import { param, validationResult, } from 'express-validator';
-import { Op, } from 'sequelize';
 import _ from 'lodash';
 
 import config from '../../../config';
@@ -53,9 +52,7 @@ class ViewGarage {
                 model: User,
                 required: true,
                 where: {
-                  id: {
-                    [Op.eq]: userId,
-                  },
+                  id: userId,
                 },
               },
             ],

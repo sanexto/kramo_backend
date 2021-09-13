@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response, } from 'express';
-import { Op, } from 'sequelize';
 
 import { JsonResponse, } from '../../base';
 import { Garage, User, } from '../../models';
@@ -31,9 +30,7 @@ class Home {
               model: User,
               required: true,
               where: {
-                id: {
-                  [Op.eq]: req.userId,
-                },
+                id: req.userId,
               },
             },
           ],
@@ -46,7 +43,7 @@ class Home {
 
       output.body = {
         state: 2,
-        title: 'Reservas',
+        title: 'Aparcamientos',
         garageAccount: {
           fullName: `${garage.name ?? ''}`,
           username: garage.User.username ?? '',
@@ -66,7 +63,7 @@ class Home {
           },
         },
         form: {
-          searchBooking: {
+          searchParking: {
             field: {
               term: {
                 hint: 'Buscar...',
@@ -76,14 +73,14 @@ class Home {
           },
         },
         list: {
-          booking: {
+          parking: {
             message: {
-              empty: 'No se encontraron reservas',
+              empty: 'No se encontraron aparcamientos',
             },
           },
         },
         page: {
-          filterBooking: {
+          filterParking: {
             title: 'Filtro',
             actionMenu: {
               item: {
@@ -93,7 +90,7 @@ class Home {
               },
             },
             form: {
-              filterBooking: {
+              filterParking: {
                 field: {
                   vehicleEntry: {
                     label: 'Entrada del vehículo',

@@ -6,9 +6,9 @@ import moment from 'moment';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
-import { Booking, Garage, User, } from '../../../models';
+import { Garage, Parking, User, } from '../../../models';
 
-class ListBooking {
+class ListParking {
 
   private static lowerTime = '00:00:00';
   private static upperTime = '23:59:59';
@@ -100,8 +100,8 @@ class ListBooking {
     .bail()
     .customSanitizer((vehicleEntry: string[], meta: Meta): string[] => {
 
-      vehicleEntry[0] = `${vehicleEntry[0]} ${ListBooking.lowerTime}`;
-      vehicleEntry[1] = `${vehicleEntry[1]} ${ListBooking.upperTime}`;
+      vehicleEntry[0] = `${vehicleEntry[0]} ${ListParking.lowerTime}`;
+      vehicleEntry[1] = `${vehicleEntry[1]} ${ListParking.upperTime}`;
 
       return vehicleEntry;
 
@@ -152,8 +152,8 @@ class ListBooking {
     .bail()
     .customSanitizer((vehicleExit: string[], meta: Meta): string[] => {
 
-      vehicleExit[0] = `${vehicleExit[0]} ${ListBooking.lowerTime}`;
-      vehicleExit[1] = `${vehicleExit[1]} ${ListBooking.upperTime}`;
+      vehicleExit[0] = `${vehicleExit[0]} ${ListParking.lowerTime}`;
+      vehicleExit[1] = `${vehicleExit[1]} ${ListParking.upperTime}`;
 
       return vehicleExit;
 
@@ -171,7 +171,7 @@ class ListBooking {
     .notEmpty()
     .withMessage('El campo "Ordenar por" está vacío')
     .bail()
-    .isIn(Object.keys(ListBooking.orderByMap))
+    .isIn(Object.keys(ListParking.orderByMap))
     .withMessage('El campo "Ordenar por" no tiene un valor permitido')
     .bail()
     .run(req);
@@ -187,7 +187,7 @@ class ListBooking {
     .notEmpty()
     .withMessage('El campo "Orden" está vacío')
     .bail()
-    .isIn(Object.keys(ListBooking.orderMap))
+    .isIn(Object.keys(ListParking.orderMap))
     .withMessage('El campo "Orden" no tiene un valor permitido')
     .bail()
     .run(req);
@@ -232,11 +232,11 @@ class ListBooking {
       const page: number = Number(req.query.page);
       const pageSize: number = Number(req.query.pageSize);
       
-      let bookings: Booking[] = [];
+      let parkings: Parking[] = [];
 
       try {
 
-        bookings = await Booking.findAll(
+        parkings = await Parking.findAll(
           {
             include: [
               {
@@ -247,9 +247,7 @@ class ListBooking {
                     model: User,
                     required: true,
                     where: {
-                      id: {
-                        [Op.eq]: req.userId,
-                      },
+                      id: req.userId,
                     },
                   },
                 ],
@@ -258,7 +256,7 @@ class ListBooking {
             where: {
               [Op.or]: [
                 {
-                  '$Booking.vehiclePlate$': {
+                  '$Parking.vehiclePlate$': {
                     [Op.or]: term.map((token: string): { [Op.substring]: string } => {
   
                       return {
@@ -269,16 +267,16 @@ class ListBooking {
                   },
                 },
               ],
-              '$Booking.vehicleEntry$': _.isEmpty(vehicleEntry) ? { [Op.and]: [], } : {
+              '$Parking.vehicleEntry$': _.isEmpty(vehicleEntry) ? { [Op.and]: [], } : {
                 [Op.between]: [vehicleEntry[0], vehicleEntry[1]],
               },
-              '$Booking.vehicleExit$': _.isEmpty(vehicleExit) ? { [Op.and]: [], } : {
+              '$Parking.vehicleExit$': _.isEmpty(vehicleExit) ? { [Op.and]: [], } : {
                 [Op.between]: [vehicleExit[0], vehicleExit[1]],
               },
             },
             order: [
-              [...ListBooking.orderByMap[orderBy], ListBooking.orderMap[order]],
-              ['id', ListBooking.orderMap[order]],
+              [...ListParking.orderByMap[orderBy], ListParking.orderMap[order]],
+              ['id', ListParking.orderMap[order]],
             ],
             offset: pageSize * (page - 1),
             limit: pageSize,
@@ -287,35 +285,35 @@ class ListBooking {
 
       } catch(_) {}
 
-      if (!_.isEmpty(bookings)) {
+      if (!_.isEmpty(parkings)) {
 
-        output.body.items = bookings.map((booking: Booking): Record<string, any> => {
+        output.body.items = parkings.map((parking: Parking): Record<string, any> => {
 
           const item: Record<string, any> = {
             info: {
-              bookingId: booking.id ?? 0,
+              parkingId: parking.id ?? 0,
               vehiclePlate: {
                 label: 'Matrícula del vehículo',
-                value: booking.vehiclePlate ?? '',
+                value: parking.vehiclePlate ?? '',
               },
               vehicleEntry: {
                 label: 'Entrada del vehículo',
-                value: moment(booking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D H:m') : '',
+                value: moment(parking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleEntry).format('YYYY/M/D H:m') : '',
               },
               vehicleExit: {
                 label: 'Salida del vehículo',
-                value: moment(booking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D H:m') : '-',
+                value: moment(parking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleExit).format('YYYY/M/D H:m') : '-',
               },
             },
             menu: {
               item: [
                 {
                   title: 'Modificar',
-                  value: 'updateBooking',
+                  value: 'updateParking',
                 },
                 {
                   title: 'Eliminar',
-                  value: 'deleteBooking',
+                  value: 'deleteParking',
                 },
               ],
             },
@@ -340,5 +338,5 @@ class ListBooking {
 }
 
 export {
-  ListBooking,
+  ListParking,
 };

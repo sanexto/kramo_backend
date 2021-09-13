@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, } from 'express';
 import { Meta, param, validationResult, } from 'express-validator';
-import { Op, Transaction, } from 'sequelize';
+import { Transaction, } from 'sequelize';
 import _ from 'lodash';
 
 import config from '../../../config';
@@ -67,9 +67,7 @@ class DeleteAdmin {
                 model: User,
                 required: true,
                 where: {
-                  id: {
-                    [Op.eq]: userId,
-                  },
+                  id: userId,
                 },
               },
             ],

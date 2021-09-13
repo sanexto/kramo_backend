@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response, } from 'express';
 import { param, validationResult, } from 'express-validator';
-import { Op, } from 'sequelize';
 import _ from 'lodash';
 import moment from 'moment';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
-import { Booking, Garage, User, } from '../../../models';
+import { Garage, Parking, User, } from '../../../models';
 
-class ViewBooking {
+class ViewParking {
 
   public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
 
@@ -24,15 +23,15 @@ class ViewBooking {
       },
     };
 
-    await param('bookingId')
+    await param('parkingId')
     .exists({ checkNull: true })
-    .withMessage('El campo "ID de reserva" no existe')
+    .withMessage('El campo "ID de aparcamiento" no existe')
     .bail()
     .isInt({ allow_leading_zeroes: false })
-    .withMessage('El campo "ID de reserva" no es un número entero')
+    .withMessage('El campo "ID de aparcamiento" no es un número entero')
     .bail()
     .isInt({ min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })
-    .withMessage(`El campo "ID de reserva" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
+    .withMessage(`El campo "ID de aparcamiento" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
     .bail()
     .toInt()
     .run(req);
@@ -41,13 +40,13 @@ class ViewBooking {
 
     if (_.isEmpty(validationError)) {
 
-      const bookingId: number = Number(req.params.bookingId);
+      const parkingId: number = Number(req.params.parkingId);
 
-      let booking: Booking | null = null;
+      let parking: Parking | null = null;
 
       try {
 
-        booking = await Booking.findOne(
+        parking = await Parking.findOne(
           {
             include: [
               {
@@ -58,52 +57,48 @@ class ViewBooking {
                     model: User,
                     required: true,
                     where: {
-                      id: {
-                        [Op.eq]: req.userId,
-                      },
+                      id: req.userId,
                     },
                   },
                 ],
               },
             ],
             where: {
-              id: {
-                [Op.eq]: bookingId,
-              },
+              id: parkingId,
             },
           },
         );
 
       } catch(_) {}
 
-      if (booking != null) {
+      if (parking != null) {
 
         output.body = {
           state: 2,
-          title: 'Datos de la reserva',
-          bookingInfo: {
-            bookingId: {
+          title: 'Datos del aparcamiento',
+          parkingInfo: {
+            parkingId: {
               label: 'ID',
-              value: booking.id ?? 0,
+              value: parking.id ?? 0,
             },
             vehiclePlate: {
               label: 'Matrícula del vehículo',
-              value: booking.vehiclePlate ?? '',
+              value: parking.vehiclePlate ?? '',
             },
             vehicleEntry: {
               label: 'Entrada del vehículo',
-              value: moment(booking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleEntry).format('YYYY/M/D H:m') : '',
+              value: moment(parking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleEntry).format('YYYY/M/D H:m') : '',
             },
             vehicleExit: {
               label: 'Salida del vehículo',
-              value: moment(booking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(booking.vehicleExit).format('YYYY/M/D H:m') : '-',
+              value: moment(parking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleExit).format('YYYY/M/D H:m') : '-',
             },
           },
         };
 
       } else {
 
-        output.body.error.message = 'La reserva solicitada no existe';
+        output.body.error.message = 'El aparcamiento solicitado no existe';
 
       }
 
@@ -120,5 +115,5 @@ class ViewBooking {
 }
 
 export {
-  ViewBooking,
+  ViewParking,
 };

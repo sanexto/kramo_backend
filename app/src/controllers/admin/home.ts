@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response, } from 'express';
-import { Op, } from 'sequelize';
 
 import { JsonResponse, } from '../../base';
 import { Admin, User, } from '../../models';
@@ -31,9 +30,7 @@ class Home {
               model: User,
               required: true,
               where: {
-                id: {
-                  [Op.eq]: req.userId,
-                },
+                id: req.userId,
               },
             },
           ],

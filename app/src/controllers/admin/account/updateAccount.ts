@@ -33,9 +33,7 @@ class UpdateAccount {
               model: User,
               required: true,
               where: {
-                id: {
-                  [Op.eq]: req.userId,
-                },
+                id: req.userId,
               },
             },
           ],
@@ -189,12 +187,8 @@ class UpdateAccount {
               id: {
                 [Op.not]: req.userId,
               },
-              username: {
-                [Op.eq]: username,
-              },
-              profile: {
-                [Op.eq]: UserBase.Profile.Admin,
-              },
+              username: username,
+              profile: UserBase.Profile.Admin,
             },
           },
         );

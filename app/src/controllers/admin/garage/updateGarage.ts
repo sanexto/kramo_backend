@@ -54,9 +54,7 @@ class UpdateGarage {
                 model: User,
                 required: true,
                 where: {
-                  id: {
-                    [Op.eq]: userId,
-                  },
+                  id: userId,
                 },
               },
             ],
@@ -226,12 +224,8 @@ class UpdateGarage {
                 id: {
                   [Op.not]: userId,
                 },
-                username: {
-                  [Op.eq]: username,
-                },
-                profile: {
-                  [Op.eq]: UserBase.Profile.Garage,
-                },
+                username: username,
+                profile: UserBase.Profile.Garage,
               },
             },
           );
