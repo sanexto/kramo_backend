@@ -30,8 +30,8 @@ class ViewParking {
     .isInt({ allow_leading_zeroes: false })
     .withMessage('El campo "ID de aparcamiento" no es un número entero')
     .bail()
-    .isInt({ min: config.types.number.min, max: config.types.number.max, allow_leading_zeroes: false })
-    .withMessage(`El campo "ID de aparcamiento" no es un número entre ${config.types.number.min} y ${config.types.number.max}`)
+    .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
+    .withMessage(`El campo "ID de aparcamiento" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
     .toInt()
     .run(req);

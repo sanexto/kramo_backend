@@ -20,7 +20,7 @@ class Admin extends Model {
     Admin.init(
       {
         id: {
-          type: DataTypes.INTEGER({ length: (config.types.number.max.toString().length + 1) }).UNSIGNED,
+          type: DataTypes.INTEGER({ length: (config.types.id.max.toString().length + 1) }).UNSIGNED,
           autoIncrement: true,
           primaryKey: true,
         },

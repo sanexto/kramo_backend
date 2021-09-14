@@ -8,6 +8,7 @@ class Parking extends Model {
   public vehiclePlate!: string;
   public vehicleEntry!: Date;
   public vehicleExit!: Date | null;
+  public parkingPrice!: number | null;
   public garageId!: number;
 
   public readonly createdAt!: Date;
@@ -20,7 +21,7 @@ class Parking extends Model {
     Parking.init(
       {
         id: {
-          type: DataTypes.INTEGER({ length: (config.types.number.max.toString().length + 1) }).UNSIGNED,
+          type: DataTypes.INTEGER({ length: (config.types.id.max.toString().length + 1) }).UNSIGNED,
           autoIncrement: true,
           primaryKey: true,
         },
@@ -34,6 +35,10 @@ class Parking extends Model {
         },
         vehicleExit: {
           type: DataTypes.DATE,
+          allowNull: true,
+        },
+        parkingPrice: {
+          type: DataTypes.DECIMAL,
           allowNull: true,
         },
       },

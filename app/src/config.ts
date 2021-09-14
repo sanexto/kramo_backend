@@ -10,7 +10,7 @@ export default {
     dialect: <'mariadb' | 'mysql' | 'postgres' | 'sqlite' | 'mssql' | undefined> process.env.DB_DIALECT,
   },
   types: {
-    number: {
+    id: {
       min: 1,
       max: 999999999,
     },
