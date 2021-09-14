@@ -21,12 +21,16 @@ class Parking extends Model {
     Parking.init(
       {
         id: {
-          type: DataTypes.INTEGER({ length: (config.types.id.max.toString().length + 1) }).UNSIGNED,
+          type: DataTypes.INTEGER({
+            length: (config.types.id.max.toString().length + 1),
+          }).UNSIGNED,
           autoIncrement: true,
           primaryKey: true,
         },
         vehiclePlate: {
-          type: DataTypes.STRING({ length: 255 }),
+          type: DataTypes.STRING({
+            length: 255,
+          }),
           allowNull: false,
         },
         vehicleEntry: {
@@ -38,7 +42,10 @@ class Parking extends Model {
           allowNull: true,
         },
         parkingPrice: {
-          type: DataTypes.DECIMAL,
+          type: DataTypes.DECIMAL({
+            precision: (config.types.decimal.max.toString().split('.')[0].length + 2),
+            scale: (config.types.decimal.max.toString().split('.')[1].length),
+          }),
           allowNull: true,
         },
       },

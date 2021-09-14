@@ -19,16 +19,22 @@ class Garage extends Model {
     Garage.init(
       {
         id: {
-          type: DataTypes.INTEGER({ length: (config.types.id.max.toString().length + 1) }).UNSIGNED,
+          type: DataTypes.INTEGER({
+            length: (config.types.id.max.toString().length + 1),
+          }).UNSIGNED,
           autoIncrement: true,
           primaryKey: true,
         },
         name: {
-          type: DataTypes.STRING({ length: 255 }),
+          type: DataTypes.STRING({
+            length: 255,
+          }),
           allowNull: false,
         },
         email: {
-          type: DataTypes.STRING({ length: 255 }),
+          type: DataTypes.STRING({
+            length: 255,
+          }),
           allowNull: false,
         },
       },

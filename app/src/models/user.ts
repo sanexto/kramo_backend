@@ -18,16 +18,22 @@ class User extends Model {
     User.init(
       {
         id: {
-          type: DataTypes.INTEGER({ length: (config.types.id.max.toString().length + 1) }).UNSIGNED,
+          type: DataTypes.INTEGER({
+            length: (config.types.id.max.toString().length + 1),
+          }).UNSIGNED,
           autoIncrement: true,
           primaryKey: true,
         },
         username: {
-          type: DataTypes.STRING({ length: 255 }),
+          type: DataTypes.STRING({
+            length: 255,
+          }),
           allowNull: false,
         },
         password: {
-          type: DataTypes.STRING({ length: 255 }),
+          type: DataTypes.STRING({
+            length: 255,
+          }),
           allowNull: false,
         },
         enabled: {
@@ -35,7 +41,9 @@ class User extends Model {
           allowNull: false,
         },
         profile: {
-          type: DataTypes.STRING({ length: 255 }),
+          type: DataTypes.STRING({
+            length: 255,
+          }),
           allowNull: false,
         },
       },
