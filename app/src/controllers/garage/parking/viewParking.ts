@@ -81,17 +81,17 @@ class ViewParking {
               label: 'ID',
               value: parking.id ?? 0,
             },
-            vehiclePlate: {
-              label: 'Matrícula del vehículo',
-              value: parking.vehiclePlate ?? '',
+            plate: {
+              label: 'Matrícula',
+              value: parking.plate ?? '',
             },
-            vehicleEntry: {
-              label: 'Entrada del vehículo',
-              value: moment(parking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleEntry).format('YYYY/M/D H:m') : '',
+            entry: {
+              label: 'Entrada',
+              value: moment(parking.entry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.entry).format('YYYY/M/D H:m') : '',
             },
-            vehicleExit: {
-              label: 'Salida del vehículo',
-              value: moment(parking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleExit).format('YYYY/M/D H:m') : '-',
+            exit: {
+              label: 'Salida',
+              value: moment(parking.exit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.exit).format('YYYY/M/D H:m') : '-',
             },
           },
         };

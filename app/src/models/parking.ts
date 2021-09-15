@@ -5,10 +5,10 @@ import config from '../config';
 class Parking extends Model {
 
   public id!: number;
-  public vehiclePlate!: string;
-  public vehicleEntry!: Date;
-  public vehicleExit!: Date | null;
-  public parkingPrice!: number | null;
+  public plate!: string;
+  public entry!: Date;
+  public exit!: Date | null;
+  public price!: number | null;
   public garageId!: number;
 
   public readonly createdAt!: Date;
@@ -27,21 +27,21 @@ class Parking extends Model {
           autoIncrement: true,
           primaryKey: true,
         },
-        vehiclePlate: {
+        plate: {
           type: DataTypes.STRING({
             length: 255,
           }),
           allowNull: false,
         },
-        vehicleEntry: {
+        entry: {
           type: DataTypes.DATE,
           allowNull: false,
         },
-        vehicleExit: {
+        exit: {
           type: DataTypes.DATE,
           allowNull: true,
         },
-        parkingPrice: {
+        price: {
           type: DataTypes.DECIMAL({
             precision: (config.types.decimal.max.toString().split('.')[0].length + 2),
             scale: (config.types.decimal.max.toString().split('.')[1].length),

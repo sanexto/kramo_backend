@@ -15,9 +15,9 @@ class ListParking {
 
   private static orderByMap: Record<string, [string] | [string, string]> = {
     id: ['id'],
-    vehiclePlate: ['vehiclePlate'],
-    vehicleEntry: ['vehicleEntry'],
-    vehicleExit: ['vehicleExit'],
+    plate: ['plate'],
+    entry: ['entry'],
+    exit: ['exit'],
   };
 
   private static orderMap: Record<string, string> = {
@@ -56,106 +56,106 @@ class ListParking {
     .bail()
     .run(req);
 
-    await query('vehicleEntry')
+    await query('entry')
     .exists({ checkNull: true })
-    .withMessage('El campo "Entrada del vehículo" no existe')
+    .withMessage('El campo "Entrada" no existe')
     .bail()
     .isString()
-    .withMessage('El campo "Entrada del vehículo" no es una cadena de texto')
+    .withMessage('El campo "Entrada" no es una cadena de texto')
     .bail()
     .trim()
     .notEmpty()
-    .withMessage('El campo "Entrada del vehículo" está vacío')
+    .withMessage('El campo "Entrada" está vacío')
     .bail()
-    .customSanitizer((vehicleEntry: string, meta: Meta): string[] => {
+    .customSanitizer((entry: string, meta: Meta): string[] => {
   
-      return vehicleEntry == '-' ? [] : _.split(vehicleEntry, '-', 2).map((date: string): string => _.trim(date));
+      return entry == '-' ? [] : _.split(entry, '-', 2).map((date: string): string => _.trim(date));
       
     })
-    .if(query('vehicleEntry').isArray({ min: 1 }))
-    .custom((vehicleEntry: string[], meta: Meta): any => {
+    .if(query('entry').isArray({ min: 1 }))
+    .custom((entry: string[], meta: Meta): any => {
 
-      if (vehicleEntry.length == 2) {
+      if (entry.length == 2) {
 
-        const startVehicleEntry: moment.Moment = moment(vehicleEntry[0], 'YYYY/M/D', true);
-        const endVehicleEntry: moment.Moment = moment(vehicleEntry[1], 'YYYY/M/D', true);
+        const startEntry: moment.Moment = moment(entry[0], 'YYYY/M/D', true);
+        const endEntry: moment.Moment = moment(entry[1], 'YYYY/M/D', true);
 
-        if (startVehicleEntry.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endVehicleEntry.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endVehicleEntry.isSameOrAfter(startVehicleEntry)) {
+        if (startEntry.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endEntry.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endEntry.isSameOrAfter(startEntry)) {
 
           return true;
 
         } else {
 
-          throw new Error('El campo "Entrada del vehículo" no tiene un valor válido');
+          throw new Error('El campo "Entrada" no tiene un valor válido');
 
         }
 
       } else {
 
-        throw new Error('El campo "Entrada del vehículo" no tiene un valor válido');
+        throw new Error('El campo "Entrada" no tiene un valor válido');
 
       }
 
     })
     .bail()
-    .customSanitizer((vehicleEntry: string[], meta: Meta): string[] => {
+    .customSanitizer((entry: string[], meta: Meta): string[] => {
 
-      vehicleEntry[0] = `${vehicleEntry[0]} ${ListParking.lowerTime}`;
-      vehicleEntry[1] = `${vehicleEntry[1]} ${ListParking.upperTime}`;
+      entry[0] = `${entry[0]} ${ListParking.lowerTime}`;
+      entry[1] = `${entry[1]} ${ListParking.upperTime}`;
 
-      return vehicleEntry;
+      return entry;
 
     })
     .run(req);
 
-    await query('vehicleExit')
+    await query('exit')
     .exists({ checkNull: true })
-    .withMessage('El campo "Salida del vehículo" no existe')
+    .withMessage('El campo "Salida" no existe')
     .bail()
     .isString()
-    .withMessage('El campo "Salida del vehículo" no es una cadena de texto')
+    .withMessage('El campo "Salida" no es una cadena de texto')
     .bail()
     .trim()
     .notEmpty()
-    .withMessage('El campo "Salida del vehículo" está vacío')
+    .withMessage('El campo "Salida" está vacío')
     .bail()
-    .customSanitizer((vehicleExit: string, meta: Meta): string[] => {
+    .customSanitizer((exit: string, meta: Meta): string[] => {
   
-      return vehicleExit == '-' ? [] : _.split(vehicleExit, '-', 2).map((date: string): string => _.trim(date));
+      return exit == '-' ? [] : _.split(exit, '-', 2).map((date: string): string => _.trim(date));
       
     })
-    .if(query('vehicleExit').isArray({ min: 1 }))
-    .custom((vehicleExit: string[], meta: Meta): any => {
+    .if(query('exit').isArray({ min: 1 }))
+    .custom((exit: string[], meta: Meta): any => {
 
-      if (vehicleExit.length == 2) {
+      if (exit.length == 2) {
 
-        const startVehicleExit: moment.Moment = moment(vehicleExit[0], 'YYYY/M/D', true);
-        const endVehicleExit: moment.Moment = moment(vehicleExit[1], 'YYYY/M/D', true);
+        const startExit: moment.Moment = moment(exit[0], 'YYYY/M/D', true);
+        const endExit: moment.Moment = moment(exit[1], 'YYYY/M/D', true);
 
-        if (startVehicleExit.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endVehicleExit.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endVehicleExit.isSameOrAfter(startVehicleExit)) {
+        if (startExit.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endExit.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endExit.isSameOrAfter(startExit)) {
 
           return true;
 
         } else {
 
-          throw new Error('El campo "Salida del vehículo" no tiene un valor válido');
+          throw new Error('El campo "Salida" no tiene un valor válido');
 
         }
 
       } else {
 
-        throw new Error('El campo "Salida del vehículo" no tiene un valor válido');
+        throw new Error('El campo "Salida" no tiene un valor válido');
 
       }
 
     })
     .bail()
-    .customSanitizer((vehicleExit: string[], meta: Meta): string[] => {
+    .customSanitizer((exit: string[], meta: Meta): string[] => {
 
-      vehicleExit[0] = `${vehicleExit[0]} ${ListParking.lowerTime}`;
-      vehicleExit[1] = `${vehicleExit[1]} ${ListParking.upperTime}`;
+      exit[0] = `${exit[0]} ${ListParking.lowerTime}`;
+      exit[1] = `${exit[1]} ${ListParking.upperTime}`;
 
-      return vehicleExit;
+      return exit;
 
     })
     .run(req);
@@ -225,8 +225,8 @@ class ListParking {
       output.body.state = 2;
 
       const term: string[] = String(req.query.term).split(' ');
-      const vehicleEntry: Date[] = (req.query.vehicleEntry as string[]).map((date: string): Date => new Date(date));
-      const vehicleExit: Date[] = (req.query.vehicleExit as string[]).map((date: string): Date => new Date(date));
+      const entry: Date[] = (req.query.entry as string[]).map((date: string): Date => new Date(date));
+      const exit: Date[] = (req.query.exit as string[]).map((date: string): Date => new Date(date));
       const orderBy: string = String(req.query.orderBy);
       const order: string = String(req.query.order);
       const page: number = Number(req.query.page);
@@ -256,7 +256,7 @@ class ListParking {
             where: {
               [Op.or]: [
                 {
-                  '$Parking.vehiclePlate$': {
+                  '$Parking.plate$': {
                     [Op.or]: term.map((token: string): { [Op.substring]: string } => {
   
                       return {
@@ -267,11 +267,11 @@ class ListParking {
                   },
                 },
               ],
-              '$Parking.vehicleEntry$': _.isEmpty(vehicleEntry) ? { [Op.and]: [], } : {
-                [Op.between]: [vehicleEntry[0], vehicleEntry[1]],
+              '$Parking.entry$': _.isEmpty(entry) ? { [Op.and]: [], } : {
+                [Op.between]: [entry[0], entry[1]],
               },
-              '$Parking.vehicleExit$': _.isEmpty(vehicleExit) ? { [Op.and]: [], } : {
-                [Op.between]: [vehicleExit[0], vehicleExit[1]],
+              '$Parking.exit$': _.isEmpty(exit) ? { [Op.and]: [], } : {
+                [Op.between]: [exit[0], exit[1]],
               },
             },
             order: [
@@ -292,17 +292,17 @@ class ListParking {
           const item: Record<string, any> = {
             info: {
               parkingId: parking.id ?? 0,
-              vehiclePlate: {
-                label: 'Matrícula del vehículo',
-                value: parking.vehiclePlate ?? '',
+              plate: {
+                label: 'Matrícula',
+                value: parking.plate ?? '',
               },
-              vehicleEntry: {
-                label: 'Entrada del vehículo',
-                value: moment(parking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleEntry).format('YYYY/M/D H:m') : '',
+              entry: {
+                label: 'Entrada',
+                value: moment(parking.entry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.entry).format('YYYY/M/D H:m') : '',
               },
-              vehicleExit: {
-                label: 'Salida del vehículo',
-                value: moment(parking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleExit).format('YYYY/M/D H:m') : '-',
+              exit: {
+                label: 'Salida',
+                value: moment(parking.exit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.exit).format('YYYY/M/D H:m') : '-',
               },
             },
             menu: {

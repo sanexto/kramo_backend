@@ -80,43 +80,43 @@ class UpdateParking {
           form: {
             updateParking: {
               field: {
-                vehiclePlate: {
-                  label: 'Matrícula del vehículo',
+                plate: {
+                  label: 'Matrícula',
                   hint: '',
-                  value: parking.vehiclePlate ?? '',
+                  value: parking.plate ?? '',
                 },
               },
               fieldSet: {
-                vehicleEntry: {
-                  label: 'Entrada del vehículo',
+                entry: {
+                  label: 'Entrada',
                   field: {
                     date: {
                       label: 'Fecha',
                       hint: 'Seleccionar',
-                      value: moment(parking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleEntry).format('YYYY/M/D') : '',
+                      value: moment(parking.entry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.entry).format('YYYY/M/D') : '',
                       pickerHint: 'DD/MM/AAAA',
                     },
                     time: {
                       label: 'Hora',
                       hint: 'Seleccionar',
-                      value: moment(parking.vehicleEntry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleEntry).format('H:m') : '',
+                      value: moment(parking.entry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.entry).format('H:m') : '',
                       pickerHint: 'HH:MM',
                     },
                   },
                 },
-                vehicleExit: {
-                  label: 'Salida del vehículo',
+                exit: {
+                  label: 'Salida',
                   field: {
                     date: {
                       label: 'Fecha',
                       hint: 'Seleccionar',
-                      value: moment(parking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleExit).format('YYYY/M/D') : '',
+                      value: moment(parking.exit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.exit).format('YYYY/M/D') : '',
                       pickerHint: 'DD/MM/AAAA',
                     },
                     time: {
                       label: 'Hora',
                       hint: 'Seleccionar',
-                      value: moment(parking.vehicleExit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.vehicleExit).format('H:m') : '',
+                      value: moment(parking.exit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.exit).format('H:m') : '',
                       pickerHint: 'HH:MM',
                     },
                   },
@@ -181,12 +181,12 @@ class UpdateParking {
 
       const parkingId: number = Number(req.params.parkingId);
 
-      await body('vehiclePlate')
+      await body('plate')
       .exists({ checkNull: true })
-      .withMessage('El campo "Matrícula del vehículo" no existe')
+      .withMessage('El campo "Matrícula" no existe')
       .bail()
       .isString()
-      .withMessage('El campo "Matrícula del vehículo" no es una cadena de texto')
+      .withMessage('El campo "Matrícula" no es una cadena de texto')
       .bail()
       .trim()
       .notEmpty()
@@ -197,22 +197,22 @@ class UpdateParking {
       .bail()
       .run(req);
 
-      await body('vehicleEntryDate')
+      await body('entryDate')
       .exists({ checkNull: true })
-      .withMessage('El campo "Fecha de entrada del vehículo" no existe')
+      .withMessage('El campo "Fecha de entrada" no existe')
       .bail()
       .isString()
-      .withMessage('El campo "Fecha de entrada del vehículo" no es una cadena de texto')
+      .withMessage('El campo "Fecha de entrada" no es una cadena de texto')
       .bail()
       .trim()
       .notEmpty()
       .withMessage('Debes ingresar la fecha de entrada del vehículo')
       .bail()
-      .custom((vehicleEntryDate: string, meta: Meta): any => {
+      .custom((entryDate: string, meta: Meta): any => {
 
-        if (!moment(vehicleEntryDate, 'YYYY/M/D', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
+        if (!moment(entryDate, 'YYYY/M/D', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
 
-          throw new Error('El campo "Fecha de entrada del vehículo" no tiene un valor válido');
+          throw new Error('El campo "Fecha de entrada" no tiene un valor válido');
 
         } else {
 
@@ -224,22 +224,22 @@ class UpdateParking {
       .bail()
       .run(req);
 
-      await body('vehicleEntryTime')
+      await body('entryTime')
       .exists({ checkNull: true })
-      .withMessage('El campo "Hora de entrada del vehículo" no existe')
+      .withMessage('El campo "Hora de entrada" no existe')
       .bail()
       .isString()
-      .withMessage('El campo "Hora de entrada del vehículo" no es una cadena de texto')
+      .withMessage('El campo "Hora de entrada" no es una cadena de texto')
       .bail()
       .trim()
       .notEmpty()
       .withMessage('Debes ingresar la hora de entrada del vehículo')
       .bail()
-      .custom((vehicleEntryTime: string, meta: Meta): any => {
+      .custom((entryTime: string, meta: Meta): any => {
 
-        if (!moment(vehicleEntryTime, 'H:m', true).isValid()) {
+        if (!moment(entryTime, 'H:m', true).isValid()) {
 
-          throw new Error('El campo "Hora de entrada del vehículo" no tiene un valor válido');
+          throw new Error('El campo "Hora de entrada" no tiene un valor válido');
 
         } else {
 
@@ -251,20 +251,20 @@ class UpdateParking {
       .bail()
       .run(req);
 
-      await body('vehicleExitDate')
+      await body('exitDate')
       .exists({ checkNull: true })
-      .withMessage('El campo "Fecha de salida del vehículo" no existe')
+      .withMessage('El campo "Fecha de salida" no existe')
       .bail()
       .isString()
-      .withMessage('El campo "Fecha de salida del vehículo" no es una cadena de texto')
+      .withMessage('El campo "Fecha de salida" no es una cadena de texto')
       .bail()
       .trim()
-      .if(body('vehicleExitDate').notEmpty())
-      .custom((vehicleExitDate: string, meta: Meta): any => {
+      .if(body('exitDate').notEmpty())
+      .custom((exitDate: string, meta: Meta): any => {
 
-        if (!moment(vehicleExitDate, 'YYYY/M/D', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
+        if (!moment(exitDate, 'YYYY/M/D', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
 
-          throw new Error('El campo "Fecha de salida del vehículo" no tiene un valor válido');
+          throw new Error('El campo "Fecha de salida" no tiene un valor válido');
 
         } else {
 
@@ -276,20 +276,20 @@ class UpdateParking {
       .bail()
       .run(req);
 
-      await body('vehicleExitTime')
+      await body('exitTime')
       .exists({ checkNull: true })
-      .withMessage('El campo "Hora de salida del vehículo" no existe')
+      .withMessage('El campo "Hora de salida" no existe')
       .bail()
       .isString()
-      .withMessage('El campo "Hora de salida del vehículo" no es una cadena de texto')
+      .withMessage('El campo "Hora de salida" no es una cadena de texto')
       .bail()
       .trim()
-      .if(body('vehicleExitTime').notEmpty())
-      .custom((vehicleExitTime: string, meta: Meta): any => {
+      .if(body('exitTime').notEmpty())
+      .custom((exitTime: string, meta: Meta): any => {
 
-        if (!moment(vehicleExitTime, 'H:m', true).isValid()) {
+        if (!moment(exitTime, 'H:m', true).isValid()) {
 
-          throw new Error('El campo "Hora de salida del vehículo" no tiene un valor válido');
+          throw new Error('El campo "Hora de salida" no tiene un valor válido');
 
         } else {
 
@@ -301,15 +301,15 @@ class UpdateParking {
       .bail()
       .run(req);
 
-      await body('vehicleExitDate')
-      .if(body('vehicleExitTime').notEmpty())
+      await body('exitDate')
+      .if(body('exitTime').notEmpty())
       .notEmpty()
       .withMessage('Debes ingresar la fecha de salida del vehículo')
       .bail()
       .run(req);
 
-      await body('vehicleExitTime')
-      .if(body('vehicleExitDate').notEmpty())
+      await body('exitTime')
+      .if(body('exitDate').notEmpty())
       .notEmpty()
       .withMessage('Debes ingresar la hora de salida del vehículo')
       .bail()
@@ -321,22 +321,22 @@ class UpdateParking {
 
         let validationError: Record<string, Validator.ValidationError> = {};
 
-        if (!_.isEmpty(req.body.vehicleExitDate) && !_.isEmpty(req.body.vehicleExitTime)) {
+        if (!_.isEmpty(req.body.exitDate) && !_.isEmpty(req.body.exitTime)) {
 
-          if (!moment(req.body.vehicleExitDate, 'YYYY/M/D', true).isSameOrAfter(moment(req.body.vehicleEntryDate, 'YYYY/M/D', true))) {
+          if (!moment(req.body.exitDate, 'YYYY/M/D', true).isSameOrAfter(moment(req.body.entryDate, 'YYYY/M/D', true))) {
 
             validationError = {
-              vehicleExitDate: {
+              exitDate: {
                 message: 'La fecha de salida del vehículo debe ser igual o posterior a la fecha de su entrada',
               },
             };
 
           }
 
-          if (moment(req.body.vehicleExitDate, 'YYYY/M/D', true).isSame(moment(req.body.vehicleEntryDate, 'YYYY/M/D', true)) && !moment(req.body.vehicleExitTime, 'H:m', true).isSameOrAfter(moment(req.body.vehicleEntryTime, 'H:m', true))) {
+          if (moment(req.body.exitDate, 'YYYY/M/D', true).isSame(moment(req.body.entryDate, 'YYYY/M/D', true)) && !moment(req.body.exitTime, 'H:m', true).isSameOrAfter(moment(req.body.entryTime, 'H:m', true))) {
 
             validationError = {
-              vehicleExitTime: {
+              exitTime: {
                 message: 'La hora de salida del vehículo debe ser igual o posterior a la hora de su entrada',
               },
             };
@@ -347,9 +347,9 @@ class UpdateParking {
 
         if (_.isEmpty(validationError)) {
 
-          const vehiclePlate: string = String(req.body.vehiclePlate);
-          const vehicleEntry: Date = new Date(`${req.body.vehicleEntryDate} ${req.body.vehicleEntryTime}`);
-          const vehicleExit: Date | null = _.isEmpty(req.body.vehicleExitDate) && _.isEmpty(req.body.vehicleExitTime) ? null : new Date(`${req.body.vehicleExitDate} ${req.body.vehicleExitTime}`);
+          const plate: string = String(req.body.plate);
+          const entry: Date = new Date(`${req.body.entryDate} ${req.body.entryTime}`);
+          const exit: Date | null = _.isEmpty(req.body.exitDate) && _.isEmpty(req.body.exitTime) ? null : new Date(`${req.body.exitDate} ${req.body.exitTime}`);
 
           let updatedParking: boolean = false;
           const transaction: Transaction = await sequelize.transaction();
@@ -375,9 +375,9 @@ class UpdateParking {
 
               await Parking.update(
                 {
-                  vehiclePlate,
-                  vehicleEntry,
-                  vehicleExit,
+                  plate,
+                  entry,
+                  exit,
                 },
                 {
                   where: {

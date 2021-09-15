@@ -92,15 +92,15 @@ class Home {
             form: {
               filterParking: {
                 field: {
-                  vehicleEntry: {
-                    label: 'Entrada del vehículo',
+                  entry: {
+                    label: 'Entrada',
                     hint: '',
                     value: ' - ',
                     default: ' - ',
                     pickerHint: 'DD/MM/AAAA',
                   },
-                  vehicleExit: {
-                    label: 'Salida del vehículo',
+                  exit: {
+                    label: 'Salida',
                     hint: '',
                     value: ' - ',
                     default: ' - ',
@@ -115,16 +115,16 @@ class Home {
                         value: 'id',
                       },
                       {
-                        label: 'Matrícula del vehículo',
-                        value: 'vehiclePlate',
+                        label: 'Matrícula',
+                        value: 'plate',
                       },
                       {
-                        label: 'Entrada del vehículo',
-                        value: 'vehicleEntry',
+                        label: 'Entrada',
+                        value: 'entry',
                       },
                       {
-                        label: 'Salida del vehículo',
-                        value: 'vehicleExit',
+                        label: 'Salida',
+                        value: 'exit',
                       },
                     ],
                     value: 'id',
