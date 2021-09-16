@@ -18,6 +18,7 @@ class ListParking {
     plate: ['plate'],
     entry: ['entry'],
     exit: ['exit'],
+    price: ['price'],
   };
 
   private static orderMap: Record<string, string> = {
@@ -303,6 +304,10 @@ class ListParking {
               exit: {
                 label: 'Salida',
                 value: moment(parking.exit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.exit).format('YYYY/M/D H:m') : '-',
+              },
+              price: {
+                label: 'Importe',
+                value: parking.price ? `$ ${parking.price.toLocaleString(config.locale)}` : '-',
               },
             },
             menu: {

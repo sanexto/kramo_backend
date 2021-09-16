@@ -27,6 +27,11 @@ class AddParking {
               hint: '',
               value: '',
             },
+            price: {
+              label: 'Importe',
+              hint: '123,45',
+              value: '',
+            },
           },
           fieldSet: {
             entry: {
@@ -210,17 +215,44 @@ class AddParking {
     .bail()
     .run(req);
 
+    await body('price')
+    .exists({ checkNull: true })
+    .withMessage('El campo "Importe" no existe')
+    .bail()
+    .isString()
+    .withMessage('El campo "Importe" no es una cadena de texto')
+    .bail()
+    .trim()
+    .if(body('price').notEmpty())
+    .isFloat()
+    .withMessage('El importe de aparcamiento debe ser un número')
+    .bail()
+    .isFloat({ min: 0})
+    .withMessage('El importe de aparcamiento debe ser mayor o igual que 0,00')
+    .bail()
+    .isFloat({ max: config.types.decimal.max })
+    .withMessage(`El importe de aparcamiento debe ser menor o igual que ${config.types.decimal.max.toLocaleString(config.locale)}`)
+    .bail()
+    .run(req);
+
     await body('exitDate')
-    .if(body('exitTime').notEmpty())
+    .if((exitDate: string, meta: Meta): any => !_.isEmpty(req.body.exitTime) || !_.isEmpty(req.body.price))
     .notEmpty()
     .withMessage('Debes ingresar la fecha de salida del vehículo')
     .bail()
     .run(req);
 
     await body('exitTime')
-    .if(body('exitDate').notEmpty())
+    .if((exitTime: string, meta: Meta): any => !_.isEmpty(req.body.exitDate) || !_.isEmpty(req.body.price))
     .notEmpty()
     .withMessage('Debes ingresar la hora de salida del vehículo')
+    .bail()
+    .run(req);
+
+    await body('price')
+    .if((price: string, meta: Meta): any => !_.isEmpty(req.body.exitDate) || !_.isEmpty(req.body.exitTime))
+    .notEmpty()
+    .withMessage('Debes ingresar el importe de aparcamiento')
     .bail()
     .run(req);
 
@@ -259,6 +291,7 @@ class AddParking {
         const plate: string = String(req.body.plate);
         const entry: Date = new Date(`${req.body.entryDate} ${req.body.entryTime}`);
         const exit: Date | null = _.isEmpty(req.body.exitDate) && _.isEmpty(req.body.exitTime) ? null : new Date(`${req.body.exitDate} ${req.body.exitTime}`);
+        const price: Number | null = _.isEmpty(req.body.price) ? null : Number(req.body.price);
 
         let addedParking: boolean = false;
         const transaction: Transaction = await sequelize.transaction();
@@ -287,6 +320,7 @@ class AddParking {
                 plate,
                 entry,
                 exit,
+                price,
                 garageId: garage.id,
               },
               {

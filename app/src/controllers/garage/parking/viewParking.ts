@@ -75,7 +75,7 @@ class ViewParking {
 
         output.body = {
           state: 2,
-          title: 'Datos del aparcamiento',
+          title: 'Datos de aparcamiento',
           parkingInfo: {
             parkingId: {
               label: 'ID',
@@ -92,6 +92,10 @@ class ViewParking {
             exit: {
               label: 'Salida',
               value: moment(parking.exit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.exit).format('YYYY/M/D H:m') : '-',
+            },
+            price: {
+              label: 'Importe',
+              value: parking.price ? `$ ${parking.price.toLocaleString(config.locale)}` : '-',
             },
           },
         };
