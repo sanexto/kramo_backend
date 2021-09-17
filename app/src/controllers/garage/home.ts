@@ -126,6 +126,10 @@ class Home {
                         label: 'Salida',
                         value: 'exit',
                       },
+                      {
+                        label: 'Importe',
+                        value: 'price',
+                      },
                     ],
                     value: 'id',
                     default: 'id',
