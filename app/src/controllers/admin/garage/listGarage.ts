@@ -94,7 +94,6 @@ class ListGarage {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "Página" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
     .run(req);
 
     await query('pageSize')
@@ -107,7 +106,6 @@ class ListGarage {
     .isInt({ min: config.types.id.min, max: 50, allow_leading_zeroes: false })
     .withMessage(`El campo "Tamaño de página" no es un número entre ${config.types.id.min} y 50`)
     .bail()
-    .toInt()
     .run(req);
 
     const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
@@ -188,9 +186,9 @@ class ListGarage {
 
           const item: Record<string, any> = {
             info: {
-              userId: garage.User.id ?? 0,
-              username: garage.User.username ?? '',
-              fullName: `${garage.name ?? ''}`,
+              userId: _.isNull(garage.User.id) ? 0 : garage.User.id,
+              username: _.isNull(garage.User.username) ? '' : garage.User.username,
+              fullName: _.isNull(garage.name) ? '' : garage.name,
             },
             menu: {
               item: [

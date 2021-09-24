@@ -42,7 +42,7 @@ class UpdateAccount {
 
     } catch(_) {}
 
-    if (admin != null) {
+    if (!_.isNull(admin)) {
 
       output.body = {
         state: 2,
@@ -53,22 +53,22 @@ class UpdateAccount {
               name: {
                 label: 'Nombre',
                 hint: '',
-                value: admin.name ?? '',
+                value: _.isNull(admin.name) ? '' : admin.name,
               },
               surname: {
                 label: 'Apellido',
                 hint: '',
-                value: admin.surname ?? '',
+                value: _.isNull(admin.surname) ? '' : admin.surname,
               },
               email: {
                 label: 'Correo',
                 hint: '',
-                value: admin.email ?? '',
+                value: _.isNull(admin.email) ? '' : admin.email,
               },
               username: {
                 label: 'Usuario',
                 hint: '',
-                value: admin.User.username ?? '',
+                value: _.isNull(admin.User.username) ? '' : admin.User.username,
               },
             },
             button: {

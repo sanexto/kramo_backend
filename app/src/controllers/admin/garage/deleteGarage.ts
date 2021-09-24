@@ -33,7 +33,6 @@ class DeleteGarage {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "ID de usuario" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
     .run(req);
 
     const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
@@ -62,12 +61,12 @@ class DeleteGarage {
 
       } catch(_) {}
 
-      if (garage != null) {
+      if (!_.isNull(garage)) {
 
         output.body = {
           state: 2,
           title: 'Eliminar cochera',
-          content: `¿Está seguro que desea eliminar la cochera "${garage.User.username ?? ''}"?`,
+          content: `¿Está seguro que desea eliminar la cochera "${_.isNull(garage.User.username) ? '' : garage.User.username}"?`,
           form: {
             deleteGarage: {
               button: {
@@ -121,7 +120,6 @@ class DeleteGarage {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "ID de usuario" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
     .run(req);
 
     const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, } from 'express';
+import _ from 'lodash';
 
 import { JsonResponse, } from '../../base';
 import { Admin, User, } from '../../models';
@@ -39,15 +40,15 @@ class Home {
 
     } catch(_) {}
 
-    if (admin != null) {
+    if (!_.isNull(admin)) {
 
       output.body = {
         state: 2,
         title: '',
         adminAccount: {
-          fullName: `${admin.name ?? ''} ${admin.surname ?? ''}`,
-          username: admin.User.username ?? '',
-          picture: `${(admin.User.username ?? '').substr(0, 1).toUpperCase()}${(admin.User.username ?? '').substr(-1, 1).toUpperCase()}`,
+          fullName: `${_.isNull(admin.name) ? '' : admin.name} ${_.isNull(admin.surname) ? '' : admin.surname}`,
+          username: _.isNull(admin.User.username) ? '' : admin.User.username,
+          picture: `${(_.isNull(admin.User.username) ? '' : admin.User.username).substr(0, 1).toUpperCase()}${(_.isNull(admin.User.username) ? '' : admin.User.username).substr(-1, 1).toUpperCase()}`,
         },
         navMenu: {
           item: {

@@ -253,7 +253,7 @@ class Signup {
           
         } catch(_) {}
 
-        if (token != null) {
+        if (!_.isNull(token)) {
 
           await transaction.commit();
 
@@ -269,7 +269,7 @@ class Signup {
 
       }
 
-      if (token != null) {
+      if (!_.isNull(token)) {
 
         output.body.state = 3;
         output.body.message = 'Cuenta creada con éxito';

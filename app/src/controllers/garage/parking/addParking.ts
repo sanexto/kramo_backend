@@ -3,6 +3,7 @@ import { body, Meta, validationResult, } from 'express-validator';
 import { Transaction, } from 'sequelize';
 import _ from 'lodash';
 import moment from 'moment';
+import Globalize from 'globalize';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
@@ -83,6 +84,10 @@ class AddParking {
   }
 
   public static async post(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+    Globalize.load(require('cldr-data').entireSupplemental());
+    Globalize.load(require('cldr-data').entireMainFor(config.locale));
+    Globalize.locale(config.locale);
 
     const output: JsonResponse.Output = {
       status: JsonResponse.Status.Ok,
@@ -224,6 +229,13 @@ class AddParking {
     .bail()
     .trim()
     .if(body('price').notEmpty())
+    .customSanitizer((price: string, meta: Meta): string => {
+
+      const number: number = Globalize.numberParser()(price);
+  
+      return !_.isNaN(number) ? number.toString() : '';
+      
+    })
     .isFloat()
     .withMessage('El importe de aparcamiento debe ser un número')
     .bail()

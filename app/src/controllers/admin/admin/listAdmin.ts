@@ -95,7 +95,6 @@ class ListAdmin {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "Página" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
     .run(req);
 
     await query('pageSize')
@@ -108,7 +107,6 @@ class ListAdmin {
     .isInt({ min: config.types.id.min, max: 50, allow_leading_zeroes: false })
     .withMessage(`El campo "Tamaño de página" no es un número entre ${config.types.id.min} y 50`)
     .bail()
-    .toInt()
     .run(req);
 
     const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
@@ -205,9 +203,9 @@ class ListAdmin {
 
           const item: Record<string, any> = {
             info: {
-              userId: admin.User.id ?? 0,
-              username: admin.User.username ?? '',
-              fullName: `${admin.name ?? ''} ${admin.surname ?? ''}`,
+              userId: _.isNull(admin.User.id) ? 0 : admin.User.id,
+              username: _.isNull(admin.User.username) ? '' : admin.User.username,
+              fullName: `${_.isNull(admin.name) ? '' : admin.name} ${_.isNull(admin.surname) ? '' : admin.surname}`,
             },
             menu: {
               item: [

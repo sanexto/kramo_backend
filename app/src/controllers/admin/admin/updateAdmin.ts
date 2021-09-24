@@ -34,10 +34,9 @@ class UpdateAdmin {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "ID de usuario" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
-    .custom((userId: number, meta: Meta): any => {
+    .custom((userId: string, meta: Meta): any => {
 
-      if (userId == req.userId) {
+      if (_.toNumber(userId) == req.userId) {
 
         throw new Error('No puedes modificarte a ti mismo');
 
@@ -77,7 +76,7 @@ class UpdateAdmin {
 
       } catch(_) {}
 
-      if (admin != null) {
+      if (!_.isNull(admin)) {
 
         output.body = {
           state: 2,
@@ -88,22 +87,22 @@ class UpdateAdmin {
                 name: {
                   label: 'Nombre',
                   hint: '',
-                  value: admin.name ?? '',
+                  value: _.isNull(admin.name) ? '' : admin.name,
                 },
                 surname: {
                   label: 'Apellido',
                   hint: '',
-                  value: admin.surname ?? '',
+                  value: _.isNull(admin.surname) ? '' : admin.surname,
                 },
                 email: {
                   label: 'Correo',
                   hint: '',
-                  value: admin.email ?? '',
+                  value: _.isNull(admin.email) ? '' : admin.email,
                 },
                 username: {
                   label: 'Usuario',
                   hint: '',
-                  value: admin.User.username ?? '',
+                  value: _.isNull(admin.User.username) ? '' : admin.User.username,
                 },
                 password: {
                   label: 'Contraseña',
@@ -113,7 +112,7 @@ class UpdateAdmin {
                 },
                 enabled: {
                   label: 'Habilitado',
-                  value: admin.User.enabled ?? false,
+                  value: _.isNull(admin.User.enabled) ? false : admin.User.enabled,
                 },
               },
               button: {
@@ -164,10 +163,9 @@ class UpdateAdmin {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "ID de usuario" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
-    .custom((userId: number, meta: Meta): any => {
+    .custom((userId: string, meta: Meta): any => {
 
-      if (userId == req.userId) {
+      if (_.toNumber(userId) == req.userId) {
 
         throw new Error('No puedes modificarte a ti mismo');
 

@@ -33,10 +33,9 @@ class DeleteAdmin {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "ID de usuario" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
-    .custom((userId: number, meta: Meta): any => {
+    .custom((userId: string, meta: Meta): any => {
 
-      if (userId == req.userId) {
+      if (_.toNumber(userId) == req.userId) {
 
         throw new Error('No puedes eliminarte a ti mismo');
 
@@ -76,12 +75,12 @@ class DeleteAdmin {
 
       } catch(_) {}
 
-      if (admin != null) {
+      if (!_.isNull(admin)) {
 
         output.body = {
           state: 2,
           title: 'Eliminar administrador',
-          content: `¿Está seguro que desea eliminar el administrador "${admin.User.username ?? ''}"?`,
+          content: `¿Está seguro que desea eliminar el administrador "${_.isNull(admin.User.username) ? '' : admin.User.username}"?`,
           form: {
             deleteAdmin: {
               button: {
@@ -135,10 +134,9 @@ class DeleteAdmin {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "ID de usuario" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
-    .custom((userId: number, meta: Meta): any => {
+    .custom((userId: string, meta: Meta): any => {
 
-      if (userId == req.userId) {
+      if (_.toNumber(userId) == req.userId) {
 
         throw new Error('No puedes eliminarte a ti mismo');
 

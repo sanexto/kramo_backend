@@ -42,7 +42,7 @@ class UpdateAccount {
 
     } catch(_) {}
 
-    if (garage != null) {
+    if (!_.isNull(garage)) {
 
       output.body = {
         state: 2,
@@ -53,17 +53,17 @@ class UpdateAccount {
               name: {
                 label: 'Nombre',
                 hint: '',
-                value: garage.name ?? '',
+                value: _.isNull(garage.name) ? '' : garage.name,
               },
               email: {
                 label: 'Correo',
                 hint: '',
-                value: garage.email ?? '',
+                value: _.isNull(garage.email) ? '' : garage.email,
               },
               username: {
                 label: 'Usuario',
                 hint: '',
-                value: garage.User.username ?? '',
+                value: _.isNull(garage.User.username) ? '' : garage.User.username,
               },
             },
             button: {
@@ -236,7 +236,7 @@ class UpdateAccount {
         output.body.state = 3;
         output.body.message = 'Cuenta modificada con éxito';
         output.body.garageAccount = {
-          fullName: `${name}`,
+          fullName: name,
           username: username,
           picture: `${username.substr(0, 1).toUpperCase()}${username.substr(-1, 1).toUpperCase()}`,
         };

@@ -32,10 +32,9 @@ class ViewAdmin {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "ID de usuario" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
-    .custom((userId: number, meta: Meta): any => {
+    .custom((userId: string, meta: Meta): any => {
 
-      if (userId == req.userId) {
+      if (_.toNumber(userId) == req.userId) {
 
         throw new Error('No puedes ver información de ti mismo');
 
@@ -75,33 +74,33 @@ class ViewAdmin {
 
       } catch(_) {}
 
-      if (admin != null) {
+      if (!_.isNull(admin)) {
 
         output.body = {
           state: 2,
-          title: admin.User.username ?? '',
+          title: _.isNull(admin.User.username) ? '' : admin.User.username,
           adminInfo: {
             name: {
               label: 'Nombre',
-              value: admin.name ?? '',
+              value: _.isNull(admin.name) ? '' : admin.name,
             },
             surname: {
               label: 'Apellido',
-              value: admin.surname ?? '',
+              value: _.isNull(admin.surname) ? '' : admin.surname,
             },
             email: {
               label: 'Correo',
-              value: admin.email ?? '',
+              value: _.isNull(admin.email) ? '' : admin.email,
             },
             username: {
               label: 'Usuario',
-              value: admin.User.username ?? '',
+              value: _.isNull(admin.User.username) ? '' : admin.User.username,
             },
             enabled: {
               label: 'Habilitado',
-              value: admin.User.enabled != null ? (admin.User.enabled ? 'Sí' : 'No') : '',
+              value: _.isNull(admin.User.enabled) ? '' : (admin.User.enabled ? 'Sí' : 'No'),
             },
-            picture: `${(admin.User.username ?? '').substr(0, 1).toUpperCase()}${(admin.User.username ?? '').substr(-1, 1).toUpperCase()}`,
+            picture: `${(_.isNull(admin.User.username) ? '' : admin.User.username).substr(0, 1).toUpperCase()}${(_.isNull(admin.User.username) ? '' : admin.User.username).substr(-1, 1).toUpperCase()}`,
           },
         };
 

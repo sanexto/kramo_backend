@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, } from 'express';
+import _ from 'lodash';
 
 import { JsonResponse, } from '../../base';
 import { Garage, User, } from '../../models';
@@ -39,15 +40,15 @@ class Home {
 
     } catch(_) {}
 
-    if (garage != null) {
+    if (!_.isNull(garage)) {
 
       output.body = {
         state: 2,
         title: 'Aparcamientos',
         garageAccount: {
-          fullName: `${garage.name ?? ''}`,
-          username: garage.User.username ?? '',
-          picture: `${(garage.User.username ?? '').substr(0, 1).toUpperCase()}${(garage.User.username ?? '').substr(-1, 1).toUpperCase()}`,
+          fullName: _.isNull(garage.name) ? '' : garage.name,
+          username: _.isNull(garage.User.username) ? '' : garage.User.username,
+          picture: `${(_.isNull(garage.User.username) ? '' : garage.User.username).substr(0, 1).toUpperCase()}${(_.isNull(garage.User.username) ? '' : garage.User.username).substr(-1, 1).toUpperCase()}`,
         },
         navMenu: {
           item: {

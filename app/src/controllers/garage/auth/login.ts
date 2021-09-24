@@ -110,7 +110,7 @@ class Login {
 
       } catch(_) {}
 
-      if (user != null) {
+      if (!_.isNull(user)) {
 
         const match: boolean = await bcrypt.compare(password, user.password);
 
@@ -128,7 +128,7 @@ class Login {
             
           } catch(_) {}
 
-          if (token != null) {
+          if (!_.isNull(token)) {
 
             output.body.state = 3;
             output.body.message = 'Sesión iniciada con éxito';

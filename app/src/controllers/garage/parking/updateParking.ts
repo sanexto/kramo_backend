@@ -3,6 +3,7 @@ import { body, Meta, param, validationResult, } from 'express-validator';
 import { Transaction, } from 'sequelize';
 import _ from 'lodash';
 import moment from 'moment';
+import Globalize from 'globalize';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
@@ -11,6 +12,10 @@ import { Garage, Parking, User, sequelize, } from '../../../models';
 class UpdateParking {
 
   public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+    Globalize.load(require('cldr-data').entireSupplemental());
+    Globalize.load(require('cldr-data').entireMainFor(config.locale));
+    Globalize.locale(config.locale);
 
     const output: JsonResponse.Output = {
       status: JsonResponse.Status.Ok,
@@ -88,7 +93,10 @@ class UpdateParking {
                 price: {
                   label: 'Importe',
                   hint: '123,45',
-                  value: parking.price ? `${parking.price.toLocaleString(config.locale, { useGrouping: false })}` : '',
+                  value: !_.isNull(parking.price) ? `${Globalize.numberFormatter({
+                    minimumFractionDigits: config.types.decimal.max.toString().split('.')[1].length,
+                    useGrouping: false,
+                  })(parking.price)}` : '',
                 },
               },
               fieldSet: {
@@ -153,6 +161,10 @@ class UpdateParking {
   }
 
   public static async put(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+    Globalize.load(require('cldr-data').entireSupplemental());
+    Globalize.load(require('cldr-data').entireMainFor(config.locale));
+    Globalize.locale(config.locale);
 
     const output: JsonResponse.Output = {
       status: JsonResponse.Status.Ok,
@@ -315,6 +327,13 @@ class UpdateParking {
       .bail()
       .trim()
       .if(body('price').notEmpty())
+      .customSanitizer((price: string, meta: Meta): string => {
+
+        const number: number = Globalize.numberParser()(price);
+    
+        return !_.isNaN(number) ? number.toString() : '';
+        
+      })
       .isFloat()
       .withMessage('El importe de aparcamiento debe ser un número')
       .bail()

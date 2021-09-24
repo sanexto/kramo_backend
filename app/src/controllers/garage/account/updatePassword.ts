@@ -92,7 +92,7 @@ class UpdatePassword {
 
       } catch(_) {}
 
-      if (user != null) {
+      if (!_.isNull(user)) {
 
         const match: boolean = await bcrypt.compare(currentPassword, user.password);
 

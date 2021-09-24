@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, } from 'express';
 import { param, validationResult, } from 'express-validator';
 import _ from 'lodash';
 import moment from 'moment';
+import Globalize from 'globalize';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
@@ -10,6 +11,10 @@ import { Garage, Parking, User, } from '../../../models';
 class ViewParking {
 
   public static async get(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+    Globalize.load(require('cldr-data').entireSupplemental());
+    Globalize.load(require('cldr-data').entireMainFor(config.locale));
+    Globalize.locale(config.locale);
 
     const output: JsonResponse.Output = {
       status: JsonResponse.Status.Ok,
@@ -95,7 +100,9 @@ class ViewParking {
             },
             price: {
               label: 'Importe',
-              value: parking.price ? `$ ${parking.price.toLocaleString(config.locale)}` : '-',
+              value: !_.isNull(parking.price) ? `$ ${Globalize.numberFormatter({
+                minimumFractionDigits: config.types.decimal.max.toString().split('.')[1].length,
+              })(parking.price)}` : '-',
             },
           },
         };
