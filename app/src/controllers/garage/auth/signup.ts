@@ -216,6 +216,7 @@ class Signup {
       const passwordHash: string = await bcrypt.hash(repeatPassword, await bcrypt.genSalt());
 
       let token: string | null = null;
+      let signuped: boolean = false;
       const transaction: Transaction = await sequelize.transaction();
 
       try {
@@ -256,6 +257,7 @@ class Signup {
         if (!_.isNull(token)) {
 
           await transaction.commit();
+          signuped = true;
 
         } else {
 
@@ -269,7 +271,7 @@ class Signup {
 
       }
 
-      if (!_.isNull(token)) {
+      if (signuped) {
 
         output.body.state = 3;
         output.body.message = 'Cuenta creada con éxito';
