@@ -22,8 +22,12 @@ class Parking extends Model {
       {
         id: {
           type: DataTypes.INTEGER({
-            length: (config.types.id.max.toString().length + 1),
-          }).UNSIGNED,
+            length: Math.max(
+              Math.abs(config.types.id.min).toString().length,
+              Math.abs(config.types.id.max).toString().length,
+            ),
+            unsigned: !(config.types.id.min < 0 || config.types.id.max < 0),
+          }),
           autoIncrement: true,
           primaryKey: true,
         },
@@ -43,8 +47,18 @@ class Parking extends Model {
         },
         price: {
           type: DataTypes.DECIMAL({
-            precision: (config.types.decimal.max.toString().split('.')[0].length + 2),
-            scale: (config.types.decimal.max.toString().split('.')[1].length),
+            precision: Math.max(
+              Math.abs(config.types.decimal.min).toString().split('.')[0].length,
+              Math.abs(config.types.decimal.max).toString().split('.')[0].length,
+            ) + Math.max(
+              Math.abs(config.types.decimal.min).toString().split('.')[1].length,
+              Math.abs(config.types.decimal.max).toString().split('.')[1].length,
+            ),
+            scale: Math.max(
+              Math.abs(config.types.decimal.min).toString().split('.')[1].length,
+              Math.abs(config.types.decimal.max).toString().split('.')[1].length,
+            ),
+            unsigned: !(config.types.decimal.min < 0 || config.types.decimal.max < 0),
           }),
           allowNull: true,
         },

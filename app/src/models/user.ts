@@ -19,8 +19,12 @@ class User extends Model {
       {
         id: {
           type: DataTypes.INTEGER({
-            length: (config.types.id.max.toString().length + 1),
-          }).UNSIGNED,
+            length: Math.max(
+              Math.abs(config.types.id.min).toString().length,
+              Math.abs(config.types.id.max).toString().length,
+            ),
+            unsigned: !(config.types.id.min < 0 || config.types.id.max < 0),
+          }),
           autoIncrement: true,
           primaryKey: true,
         },
