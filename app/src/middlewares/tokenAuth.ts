@@ -54,7 +54,7 @@ function tokenAuth(profile: UserBase.Profile): (req: Request, res: Response, nex
   
       } catch(_) {}
   
-      if (payload != null && 'id' in payload && validator.isInt(payload.id.toString(), { min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })) {
+      if (!_.isNull(payload) && _.has(payload, 'id') && validator.isInt(payload.id.toString(), { min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })) {
 
         payload.id = parseInt(payload.id.toString());
 
