@@ -191,13 +191,13 @@ class Signup {
     .if(body('password').exists().isString().notEmpty().isLength({ min: 8 }).isLength({ max: 64 }))
     .custom((repeatPassword: string, meta: Meta): any => {
 
-      if (repeatPassword != req.body.password) {
+      if (repeatPassword == req.body.password) {
 
-        throw new Error('No coincide con la contraseña ingresada');
+        return true;
 
       } else {
 
-        return true;
+        throw new Error('No coincide con la contraseña ingresada');
 
       }
 

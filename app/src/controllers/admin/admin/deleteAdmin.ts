@@ -35,13 +35,13 @@ class DeleteAdmin {
     .bail()
     .custom((userId: string, meta: Meta): any => {
 
-      if (_.toNumber(userId) == req.userId) {
+      if (_.toNumber(userId) != req.userId) {
 
-        throw new Error('No puedes eliminarte a ti mismo');
+        return true;
 
       } else {
 
-        return true;
+        throw new Error('No puedes eliminarte a ti mismo');
 
       }
 
@@ -136,13 +136,13 @@ class DeleteAdmin {
     .bail()
     .custom((userId: string, meta: Meta): any => {
 
-      if (_.toNumber(userId) == req.userId) {
+      if (_.toNumber(userId) != req.userId) {
 
-        throw new Error('No puedes eliminarte a ti mismo');
+        return true;
 
       } else {
 
-        return true;
+        throw new Error('No puedes eliminarte a ti mismo');
 
       }
 

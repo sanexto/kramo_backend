@@ -36,13 +36,13 @@ class UpdateAdmin {
     .bail()
     .custom((userId: string, meta: Meta): any => {
 
-      if (_.toNumber(userId) == req.userId) {
+      if (_.toNumber(userId) != req.userId) {
 
-        throw new Error('No puedes modificarte a ti mismo');
+        return true;
 
       } else {
 
-        return true;
+        throw new Error('No puedes modificarte a ti mismo');
 
       }
 
@@ -165,13 +165,13 @@ class UpdateAdmin {
     .bail()
     .custom((userId: string, meta: Meta): any => {
 
-      if (_.toNumber(userId) == req.userId) {
+      if (_.toNumber(userId) != req.userId) {
 
-        throw new Error('No puedes modificarte a ti mismo');
+        return true;
 
       } else {
 
-        return true;
+        throw new Error('No puedes modificarte a ti mismo');
 
       }
 

@@ -143,13 +143,13 @@ class UpdatePassword {
     .if(body('newPassword').exists().isString().notEmpty().isLength({ min: 8 }).isLength({ max: 64 }))
     .custom((repeatNewPassword: string, meta: Meta): any => {
 
-      if (repeatNewPassword != req.body.newPassword) {
+      if (repeatNewPassword == req.body.newPassword) {
 
-        throw new Error('No coincide con la contraseña nueva ingresada');
+        return true;
 
       } else {
 
-        return true;
+        throw new Error('No coincide con la contraseña nueva ingresada');
 
       }
 

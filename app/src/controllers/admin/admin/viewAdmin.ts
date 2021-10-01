@@ -34,13 +34,13 @@ class ViewAdmin {
     .bail()
     .custom((userId: string, meta: Meta): any => {
 
-      if (_.toNumber(userId) == req.userId) {
+      if (_.toNumber(userId) != req.userId) {
 
-        throw new Error('No puedes ver información de ti mismo');
+        return true;
 
       } else {
 
-        return true;
+        throw new Error('No puedes ver información de ti mismo');
 
       }
 
