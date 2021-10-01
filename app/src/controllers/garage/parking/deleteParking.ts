@@ -33,7 +33,6 @@ class DeleteParking {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "ID de aparcamiento" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
     .run(req);
 
     const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
@@ -71,12 +70,12 @@ class DeleteParking {
 
       } catch(_) {}
 
-      if (parking != null) {
+      if (!_.isNull(parking)) {
 
         output.body = {
           state: 2,
           title: 'Eliminar aparcamiento',
-          content: `¿Está seguro que desea eliminar el aparcamiento #${parking.id ?? 0}?`,
+          content: `¿Está seguro que desea eliminar el aparcamiento #${_.isNull(parking.id) ? '' : parking.id}?`,
           form: {
             deleteParking: {
               button: {
@@ -130,7 +129,6 @@ class DeleteParking {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "ID de aparcamiento" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
     .run(req);
 
     const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();

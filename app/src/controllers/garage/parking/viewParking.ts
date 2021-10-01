@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response, } from 'express';
 import { param, validationResult, } from 'express-validator';
 import _ from 'lodash';
-import moment from 'moment';
 import Globalize from 'globalize';
+import moment from 'moment';
 
 import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
@@ -38,7 +38,6 @@ class ViewParking {
     .isInt({ min: config.types.id.min, max: config.types.id.max, allow_leading_zeroes: false })
     .withMessage(`El campo "ID de aparcamiento" no es un número entre ${config.types.id.min} y ${config.types.id.max}`)
     .bail()
-    .toInt()
     .run(req);
 
     const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
@@ -76,7 +75,7 @@ class ViewParking {
 
       } catch(_) {}
 
-      if (parking != null) {
+      if (!_.isNull(parking)) {
 
         output.body = {
           state: 2,
@@ -84,25 +83,32 @@ class ViewParking {
           parkingInfo: {
             parkingId: {
               label: 'ID',
-              value: parking.id ?? 0,
+              value: _.isNull(parking.id) ? 0 : parking.id,
             },
             plate: {
               label: 'Matrícula',
-              value: parking.plate ?? '',
+              value: _.isNull(parking.plate) ? '' : parking.plate,
             },
             entry: {
               label: 'Entrada',
-              value: moment(parking.entry, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.entry).format('YYYY/M/D H:m') : '',
+              value: _.isNull(parking.entry) ? '' : moment(parking.entry).format('YYYY/MM/DD HH:mm'),
             },
             exit: {
               label: 'Salida',
-              value: moment(parking.exit, 'YYYY-M-D H:m:s', true).isValid() ? moment(parking.exit).format('YYYY/M/D H:m') : '-',
+              value: _.isNull(parking.exit) ? '-' : moment(parking.exit).format('YYYY/MM/DD HH:mm'),
             },
             price: {
               label: 'Importe',
-              value: !_.isNull(parking.price) ? `$ ${Globalize.numberFormatter({
-                minimumFractionDigits: config.types.decimal.max.toString().split('.')[1].length,
-              })(parking.price)}` : '-',
+              value: _.isNull(parking.price) ? '-' : `$ ${Globalize.numberFormatter({
+                minimumFractionDigits: Math.max(
+                  Math.abs(config.types.decimal.min).toString().split('.')[1].length,
+                  Math.abs(config.types.decimal.max).toString().split('.')[1].length,
+                ),
+                maximumFractionDigits: Math.max(
+                  Math.abs(config.types.decimal.min).toString().split('.')[1].length,
+                  Math.abs(config.types.decimal.max).toString().split('.')[1].length,
+                ),
+              })(parking.price)}`,
             },
           },
         };
