@@ -23,6 +23,8 @@ class DeleteParking {
       },
     };
 
+    let validationError: Record<string, Validator.ValidationError> = {};
+
     await param('parkingId')
     .exists({ checkNull: true })
     .withMessage('El campo "ID de aparcamiento" no existe')
@@ -35,7 +37,7 @@ class DeleteParking {
     .bail()
     .run(req);
 
-    const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
     if (_.isEmpty(validationError)) {
 
@@ -119,6 +121,8 @@ class DeleteParking {
       field: {},
     };
 
+    let validationError: Record<string, Validator.ValidationError> = {};
+
     await param('parkingId')
     .exists({ checkNull: true })
     .withMessage('El campo "ID de aparcamiento" no existe')
@@ -131,7 +135,7 @@ class DeleteParking {
     .bail()
     .run(req);
 
-    const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
     if (_.isEmpty(validationError)) {
 

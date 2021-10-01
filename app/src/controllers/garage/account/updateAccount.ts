@@ -98,6 +98,8 @@ class UpdateAccount {
       field: {},
     };
 
+    let validationError: Record<string, Validator.ValidationError> = {};
+
     await body('name')
     .exists({ checkNull: true })
     .withMessage('El campo "Nombre" no existe')
@@ -184,7 +186,7 @@ class UpdateAccount {
     .bail()
     .run(req);
 
-    const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
     if (_.isEmpty(validationError)) {
 

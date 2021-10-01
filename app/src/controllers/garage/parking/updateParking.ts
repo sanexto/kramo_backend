@@ -29,6 +29,8 @@ class UpdateParking {
       },
     };
 
+    let validationError: Record<string, Validator.ValidationError> = {};
+
     await param('parkingId')
     .exists({ checkNull: true })
     .withMessage('El campo "ID de aparcamiento" no existe')
@@ -41,7 +43,7 @@ class UpdateParking {
     .bail()
     .run(req);
 
-    const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
     if (_.isEmpty(validationError)) {
 

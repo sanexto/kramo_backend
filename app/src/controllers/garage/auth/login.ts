@@ -63,6 +63,8 @@ class Login {
       field: {},
     };
 
+    let validationError: Record<string, Validator.ValidationError> = {};
+
     await body('username')
     .exists({ checkNull: true })
     .withMessage('El campo "Usuario" no existe')
@@ -88,7 +90,7 @@ class Login {
     .bail()
     .run(req);
 
-    const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
     if (_.isEmpty(validationError)) {
 

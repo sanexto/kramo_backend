@@ -44,6 +44,8 @@ class ListParking {
       items: [],
     };
 
+    let validationError: Record<string, Validator.ValidationError> = {};
+
     await query('term')
     .exists({ checkNull: true })
     .withMessage('El campo "Término" no existe')
@@ -222,7 +224,7 @@ class ListParking {
     .bail()
     .run(req);
 
-    const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
     if (_.isEmpty(validationError)) {
 
