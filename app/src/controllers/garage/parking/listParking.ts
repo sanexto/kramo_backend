@@ -83,8 +83,8 @@ class ListParking {
 
       if (entry.length == 2) {
 
-        const startEntry: moment.Moment = moment(entry[0], 'YYYY/M/D', true);
-        const endEntry: moment.Moment = moment(entry[1], 'YYYY/M/D', true);
+        const startEntry: moment.Moment = moment(entry[0], 'YYYY/MM/DD', true);
+        const endEntry: moment.Moment = moment(entry[1], 'YYYY/MM/DD', true);
 
         if (startEntry.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endEntry.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endEntry.isSameOrAfter(startEntry)) {
 
@@ -135,8 +135,8 @@ class ListParking {
 
       if (exit.length == 2) {
 
-        const startExit: moment.Moment = moment(exit[0], 'YYYY/M/D', true);
-        const endExit: moment.Moment = moment(exit[1], 'YYYY/M/D', true);
+        const startExit: moment.Moment = moment(exit[0], 'YYYY/MM/DD', true);
+        const endExit: moment.Moment = moment(exit[1], 'YYYY/MM/DD', true);
 
         if (startExit.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endExit.isBetween(config.types.date.min, config.types.date.max, undefined, '[]') && endExit.isSameOrAfter(startExit)) {
 
