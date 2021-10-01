@@ -244,14 +244,14 @@ class UpdateParking {
       .bail()
       .custom((entryDate: string, meta: Meta): any => {
 
-        if (!moment(entryDate, 'YYYY/MM/DD', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
-
-          throw new Error('El campo "Fecha de entrada" no tiene un valor válido');
-
-        } else {
+        if (moment(entryDate, 'YYYY/MM/DD', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
 
           return true;
-
+  
+        } else {
+  
+          throw new Error('El campo "Fecha de entrada" no tiene un valor válido');
+  
         }
 
       })
@@ -271,14 +271,14 @@ class UpdateParking {
       .bail()
       .custom((entryTime: string, meta: Meta): any => {
 
-        if (!moment(entryTime, 'HH:mm', true).isValid()) {
-
-          throw new Error('El campo "Hora de entrada" no tiene un valor válido');
-
-        } else {
+        if (moment(entryTime, 'HH:mm', true).isValid()) {
 
           return true;
-
+  
+        } else {
+  
+          throw new Error('El campo "Hora de entrada" no tiene un valor válido');
+  
         }
 
       })
@@ -296,14 +296,14 @@ class UpdateParking {
       .if(body('exitDate').notEmpty())
       .custom((exitDate: string, meta: Meta): any => {
 
-        if (!moment(exitDate, 'YYYY/MM/DD', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
-
-          throw new Error('El campo "Fecha de salida" no tiene un valor válido');
-
-        } else {
+        if (moment(exitDate, 'YYYY/MM/DD', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
 
           return true;
-
+  
+        } else {
+  
+          throw new Error('El campo "Fecha de salida" no tiene un valor válido');
+  
         }
 
       })
@@ -328,14 +328,14 @@ class UpdateParking {
         .if(body('exitDate').notEmpty())
         .custom((exitDate: string, meta: Meta): any => {
 
-          if (!moment(exitDate, 'YYYY/MM/DD', true).isSameOrAfter(moment(req.body.entryDate, 'YYYY/MM/DD', true))) {
-
-            throw new Error('La fecha de salida del vehículo debe ser igual o posterior a la fecha de entrada');
-
-          } else {
+          if (moment(exitDate, 'YYYY/MM/DD', true).isSameOrAfter(moment(req.body.entryDate, 'YYYY/MM/DD', true))) {
 
             return true;
-
+  
+          } else {
+  
+            throw new Error('La fecha de salida del vehículo debe ser igual o posterior a la fecha de entrada');
+  
           }
 
         })
@@ -355,14 +355,14 @@ class UpdateParking {
       .if(body('exitTime').notEmpty())
       .custom((exitTime: string, meta: Meta): any => {
 
-        if (!moment(exitTime, 'HH:mm', true).isValid()) {
-
-          throw new Error('El campo "Hora de salida" no tiene un valor válido');
-
-        } else {
+        if (moment(exitTime, 'HH:mm', true).isValid()) {
 
           return true;
-
+  
+        } else {
+  
+          throw new Error('El campo "Hora de salida" no tiene un valor válido');
+  
         }
 
       })
@@ -388,14 +388,14 @@ class UpdateParking {
         .if(body('exitTime').notEmpty())
         .custom((exitTime: string, meta: Meta): any => {
 
-          if (moment(req.body.exitDate, 'YYYY/MM/DD', true).isSame(moment(req.body.entryDate, 'YYYY/MM/DD', true)) && !moment(exitTime, 'HH:mm', true).isSameOrAfter(moment(req.body.entryTime, 'HH:mm', true))) {
-
-            throw new Error('La hora de salida del vehículo debe ser igual o posterior a la hora de entrada');
-
-          } else {
+          if (!(moment(req.body.exitDate, 'YYYY/MM/DD', true).isSame(moment(req.body.entryDate, 'YYYY/MM/DD', true)) && moment(exitTime, 'HH:mm', true).isBefore(moment(req.body.entryTime, 'HH:mm', true)))) {
 
             return true;
-
+  
+          } else {
+  
+            throw new Error('La hora de salida del vehículo debe ser igual o posterior a la hora de entrada');
+  
           }
 
         })
