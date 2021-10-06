@@ -336,9 +336,9 @@ class UpdateAdmin {
 
         if (!_.isEmpty(password)) {
 
-          const hash: string = await bcrypt.hash(password, await bcrypt.genSalt());
+          const passwordHash: string = await bcrypt.hash(password, await bcrypt.genSalt());
 
-          user.password = hash;
+          user.password = passwordHash;
 
         }
 

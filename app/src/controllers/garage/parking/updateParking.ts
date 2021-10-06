@@ -104,7 +104,7 @@ class UpdateParking {
                     ),
                     useGrouping: false,
                   })(123.45),
-                  value: _.isNull(parking.price) ? '' : `${Globalize.numberFormatter({
+                  value: _.isNull(parking.price) ? '' : Globalize.numberFormatter({
                     minimumFractionDigits: Math.max(
                       Math.abs(config.types.decimal.min).toString().split('.')[1].length,
                       Math.abs(config.types.decimal.max).toString().split('.')[1].length,
@@ -114,7 +114,7 @@ class UpdateParking {
                       Math.abs(config.types.decimal.max).toString().split('.')[1].length,
                     ),
                     useGrouping: false,
-                  })(parking.price)}`,
+                  })(parking.price),
                 },
               },
               fieldSet: {

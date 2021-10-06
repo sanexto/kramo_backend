@@ -190,7 +190,7 @@ class Signup {
     .notEmpty()
     .withMessage('Debes ingresar nuevamente la contraseña')
     .bail()
-    .if(body('password').exists().isString().notEmpty().isLength({ min: 8 }).isLength({ max: 64 }))
+    .if(body('password').exists({ checkNull: true }).isString().notEmpty().isLength({ min: 8 }).isLength({ max: 64 }))
     .custom((repeatPassword: string, meta: Meta): any => {
 
       if (repeatPassword == req.body.password) {
@@ -215,6 +215,7 @@ class Signup {
       const email: string = String(req.body.email);
       const username: string = String(req.body.username);
       const repeatPassword: string = String(req.body.repeatPassword);
+      
       const passwordHash: string = await bcrypt.hash(repeatPassword, await bcrypt.genSalt());
 
       let token: string | null = null;

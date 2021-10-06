@@ -195,7 +195,7 @@ class AddGarage {
       const password: string = String(req.body.password);
       const enabled: boolean = Boolean(req.body.enabled);
 
-      const hash: string = await bcrypt.hash(password, await bcrypt.genSalt());
+      const passwordHash: string = await bcrypt.hash(password, await bcrypt.genSalt());
 
       let addedGarage: boolean = false;
       const transaction: Transaction = await sequelize.transaction();
@@ -205,7 +205,7 @@ class AddGarage {
         const user: User = await User.create(
           {
             username: username,
-            password: hash,
+            password: passwordHash,
             enabled: enabled,
             profile: UserBase.Profile.Garage,
           },

@@ -216,8 +216,8 @@ class AddAdmin {
       const username: string = String(req.body.username);
       const password: string = String(req.body.password);
       const enabled: boolean = Boolean(req.body.enabled);
-
-      const hash: string = await bcrypt.hash(password, await bcrypt.genSalt());
+      
+      const passwordHash: string = await bcrypt.hash(password, await bcrypt.genSalt());
 
       let addedAdmin: boolean = false;
       const transaction: Transaction = await sequelize.transaction();
@@ -227,7 +227,7 @@ class AddAdmin {
         const user: User = await User.create(
           {
             username: username,
-            password: hash,
+            password: passwordHash,
             enabled: enabled,
             profile: UserBase.Profile.Admin,
           },

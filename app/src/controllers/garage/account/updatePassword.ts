@@ -142,7 +142,7 @@ class UpdatePassword {
     .notEmpty()
     .withMessage('Debes ingresar nuevamente la contraseña nueva')
     .bail()
-    .if(body('newPassword').exists().isString().notEmpty().isLength({ min: 8 }).isLength({ max: 64 }))
+    .if(body('newPassword').exists({ checkNull: true }).isString().notEmpty().isLength({ min: 8 }).isLength({ max: 64 }))
     .custom((repeatNewPassword: string, meta: Meta): any => {
 
       if (repeatNewPassword == req.body.newPassword) {
@@ -164,6 +164,7 @@ class UpdatePassword {
     if (_.isEmpty(validationError)) {
 
       const repeatNewPassword: string = String(req.body.repeatNewPassword);
+      
       const passwordHash = await bcrypt.hash(repeatNewPassword, await bcrypt.genSalt());
 
       let updatedPassword: boolean = false;
