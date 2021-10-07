@@ -211,15 +211,21 @@ class AddParking {
     .bail()
     .run(req);
 
-    await body('exitDate')
-    .if((exitDate: string, meta: Meta): any => 
-      (!_.isNil(req.body.exitTime) && (!_.isString(req.body.exitTime) || !_.isEmpty(_.trim(req.body.exitTime)))) || 
-      (!_.isNil(req.body.price) && (!_.isString(req.body.price) || !_.isEmpty(_.trim(req.body.price))))
-    )
-    .notEmpty()
-    .withMessage('Debes ingresar la fecha de salida del vehículo')
-    .bail()
-    .run(req);
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+
+    if (!_.has(validationError, 'exitDate')) {
+
+      await body('exitDate')
+      .if((exitDate: string, meta: Meta): any => 
+        (!_.isNil(req.body.exitTime) && (!_.isString(req.body.exitTime) || !_.isEmpty(_.trim(req.body.exitTime)))) || 
+        (!_.isNil(req.body.price) && (!_.isString(req.body.price) || !_.isEmpty(_.trim(req.body.price))))
+      )
+      .notEmpty()
+      .withMessage('Debes ingresar la fecha de salida del vehículo')
+      .bail()
+      .run(req);
+
+    }
 
     validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
@@ -270,15 +276,21 @@ class AddParking {
     .bail()
     .run(req);
 
-    await body('exitTime')
-    .if((exitTime: string, meta: Meta): any => 
-      (!_.isNil(req.body.exitDate) && (!_.isString(req.body.exitDate) || !_.isEmpty(_.trim(req.body.exitDate)))) || 
-      (!_.isNil(req.body.price) && (!_.isString(req.body.price) || !_.isEmpty(_.trim(req.body.price))))
-    )
-    .notEmpty()
-    .withMessage('Debes ingresar la hora de salida del vehículo')
-    .bail()
-    .run(req);
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+
+    if (!_.has(validationError, 'exitTime')) {
+
+      await body('exitTime')
+      .if((exitTime: string, meta: Meta): any => 
+        (!_.isNil(req.body.exitDate) && (!_.isString(req.body.exitDate) || !_.isEmpty(_.trim(req.body.exitDate)))) || 
+        (!_.isNil(req.body.price) && (!_.isString(req.body.price) || !_.isEmpty(_.trim(req.body.price))))
+      )
+      .notEmpty()
+      .withMessage('Debes ingresar la hora de salida del vehículo')
+      .bail()
+      .run(req);
+
+    }
 
     validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
@@ -348,15 +360,21 @@ class AddParking {
     .bail()
     .run(req);
 
-    await body('price')
-    .if((price: string, meta: Meta): any => 
-      (!_.isNil(req.body.exitDate) && (!_.isString(req.body.exitDate) || !_.isEmpty(_.trim(req.body.exitDate)))) || 
-      (!_.isNil(req.body.exitTime) && (!_.isString(req.body.exitTime) || !_.isEmpty(_.trim(req.body.exitTime))))
-    )
-    .notEmpty()
-    .withMessage('Debes ingresar el importe de aparcamiento')
-    .bail()
-    .run(req);
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+
+    if (!_.has(validationError, 'price')) {
+
+      await body('price')
+      .if((price: string, meta: Meta): any => 
+        (!_.isNil(req.body.exitDate) && (!_.isString(req.body.exitDate) || !_.isEmpty(_.trim(req.body.exitDate)))) || 
+        (!_.isNil(req.body.exitTime) && (!_.isString(req.body.exitTime) || !_.isEmpty(_.trim(req.body.exitTime))))
+      )
+      .notEmpty()
+      .withMessage('Debes ingresar el importe de aparcamiento')
+      .bail()
+      .run(req);
+
+    }
 
     validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
@@ -364,7 +382,7 @@ class AddParking {
 
       const plate: string = String(req.body.plate);
       const entry: Date = new Date(`${req.body.entryDate} ${req.body.entryTime}`);
-      const exit: Date | null = _.isEmpty(req.body.exitDate) && _.isEmpty(req.body.exitTime) ? null : new Date(`${req.body.exitDate} ${req.body.exitTime}`);
+      const exit: Date | null = _.isEmpty(req.body.exitDate) || _.isEmpty(req.body.exitTime) ? null : new Date(`${req.body.exitDate} ${req.body.exitTime}`);
       const price: Number | null = _.isEmpty(req.body.price) ? null : Number(req.body.price);
 
       let addedParking: boolean = false;
