@@ -73,6 +73,9 @@ class Login {
     .notEmpty()
     .withMessage('Debes ingresar un usuario')
     .bail()
+    .isLength({ max: 25 })
+    .withMessage('El usuario debe tener hasta 25 caracteres')
+    .bail()
     .run(req);
 
     await body('password')
@@ -84,6 +87,9 @@ class Login {
     .bail()
     .notEmpty()
     .withMessage('Debes ingresar una contraseña')
+    .bail()
+    .isLength({ max: 64 })
+    .withMessage('La contraseña debe tener hasta 64 caracteres')
     .bail()
     .run(req);
 

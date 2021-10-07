@@ -142,22 +142,30 @@ class UpdatePassword {
     .notEmpty()
     .withMessage('Debes ingresar nuevamente la contraseña nueva')
     .bail()
-    .if(body('newPassword').exists({ checkNull: true }).isString().notEmpty().isLength({ min: 8 }).isLength({ max: 64 }))
-    .custom((repeatNewPassword: string, meta: Meta): any => {
-
-      if (repeatNewPassword == req.body.newPassword) {
-
-        return true;
-
-      } else {
-
-        throw new Error('No coincide con la contraseña nueva ingresada');
-
-      }
-
-    })
-    .bail()
     .run(req);
+
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+
+    if (!_.has(validationError, 'newPassword') && !_.has(validationError, 'repeatNewPassword')) {
+
+      await body('repeatNewPassword')
+      .custom((repeatNewPassword: string, meta: Meta): any => {
+
+        if (repeatNewPassword == req.body.newPassword) {
+  
+          return true;
+  
+        } else {
+  
+          throw new Error('No coincide con la contraseña nueva ingresada');
+  
+        }
+  
+      })
+      .bail()
+      .run(req);
+
+    }
 
     validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
