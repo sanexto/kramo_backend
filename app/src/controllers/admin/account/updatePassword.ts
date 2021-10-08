@@ -78,6 +78,9 @@ class UpdatePassword {
     .notEmpty()
     .withMessage('Debes ingresar la contraseña actual')
     .bail()
+    .isLength({ max: 64 })
+    .withMessage('La contraseña actual debe tener hasta 64 caracteres')
+    .bail()
     .custom(async (currentPassword: string, meta: Meta): Promise<any> => {
 
       let user: User | null = null;
