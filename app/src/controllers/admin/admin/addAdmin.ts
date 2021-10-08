@@ -4,6 +4,7 @@ import { Transaction, } from 'sequelize';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
 
+import config from '../../../config';
 import { JsonResponse, User as UserBase, Validator, } from '../../../base';
 import { Admin, User, sequelize, } from '../../../models';
 
@@ -143,13 +144,13 @@ class AddAdmin {
     .notEmpty()
     .withMessage('Debes ingresar un usuario')
     .bail()
-    .isLength({ min: 3 })
-    .withMessage('El usuario debe tener al menos 3 caracteres')
+    .isLength({ min: config.username.minLength })
+    .withMessage(`El usuario debe tener al menos ${config.username.minLength} caracteres`)
     .bail()
-    .isLength({ max: 25 })
-    .withMessage('El usuario debe tener hasta 25 caracteres')
+    .isLength({ max: config.username.maxLength })
+    .withMessage(`El usuario debe tener hasta ${config.username.maxLength} caracteres`)
     .bail()
-    .matches(/^[a-zA-Z0-9_]+$/)
+    .matches(config.username.allowedPattern)
     .withMessage('Usuario inválido, sólo se admiten letras, números y/o _')
     .bail()
     .custom(async (username: string, meta: Meta): Promise<any> => {
@@ -189,11 +190,11 @@ class AddAdmin {
     .notEmpty()
     .withMessage('Debes ingresar una contraseña')
     .bail()
-    .isLength({ min: 8 })
-    .withMessage('La contraseña debe tener al menos 8 caracteres')
+    .isLength({ min: config.password.minLength })
+    .withMessage(`La contraseña debe tener al menos ${config.password.minLength} caracteres`)
     .bail()
-    .isLength({ max: 64 })
-    .withMessage('La contraseña debe tener hasta 64 caracteres')
+    .isLength({ max: config.password.maxLength })
+    .withMessage(`La contraseña debe tener hasta ${config.password.maxLength} caracteres`)
     .bail()
     .run(req);
 

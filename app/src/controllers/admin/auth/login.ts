@@ -73,8 +73,8 @@ class Login {
     .notEmpty()
     .withMessage('Debes ingresar un usuario')
     .bail()
-    .isLength({ max: 25 })
-    .withMessage('El usuario debe tener hasta 25 caracteres')
+    .isLength({ max: config.username.maxLength })
+    .withMessage(`El usuario debe tener hasta ${config.username.maxLength} caracteres`)
     .bail()
     .run(req);
 
@@ -88,8 +88,8 @@ class Login {
     .notEmpty()
     .withMessage('Debes ingresar una contraseña')
     .bail()
-    .isLength({ max: 64 })
-    .withMessage('La contraseña debe tener hasta 64 caracteres')
+    .isLength({ max: config.password.maxLength })
+    .withMessage(`La contraseña debe tener hasta ${config.password.maxLength} caracteres`)
     .bail()
     .run(req);
 

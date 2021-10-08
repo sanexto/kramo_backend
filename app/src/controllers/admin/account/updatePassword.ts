@@ -4,6 +4,7 @@ import { Transaction, } from 'sequelize';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
 
+import config from '../../../config';
 import { JsonResponse, Validator, } from '../../../base';
 import { User, sequelize, } from '../../../models';
 
@@ -78,8 +79,8 @@ class UpdatePassword {
     .notEmpty()
     .withMessage('Debes ingresar la contraseña actual')
     .bail()
-    .isLength({ max: 64 })
-    .withMessage('La contraseña actual debe tener hasta 64 caracteres')
+    .isLength({ max: config.password.maxLength })
+    .withMessage(`La contraseña actual debe tener hasta ${config.password.maxLength} caracteres`)
     .bail()
     .custom(async (currentPassword: string, meta: Meta): Promise<any> => {
 
@@ -127,11 +128,11 @@ class UpdatePassword {
     .notEmpty()
     .withMessage('Debes ingresar la contraseña nueva')
     .bail()
-    .isLength({ min: 8 })
-    .withMessage('La contraseña nueva debe tener al menos 8 caracteres')
+    .isLength({ min: config.password.minLength })
+    .withMessage(`La contraseña nueva debe tener al menos ${config.password.minLength} caracteres`)
     .bail()
-    .isLength({ max: 64 })
-    .withMessage('La contraseña nueva debe tener hasta 64 caracteres')
+    .isLength({ max: config.password.maxLength })
+    .withMessage(`La contraseña nueva debe tener hasta ${config.password.maxLength} caracteres`)
     .bail()
     .run(req);
 

@@ -3,6 +3,7 @@ import { body, Meta, validationResult, } from 'express-validator';
 import { Op, Transaction, } from 'sequelize';
 import _ from 'lodash';
 
+import config from '../../../config';
 import { JsonResponse, User as UserBase, Validator, } from '../../../base';
 import { Admin, User, sequelize, } from '../../../models';
 
@@ -168,13 +169,13 @@ class UpdateAccount {
     .notEmpty()
     .withMessage('Debes ingresar un usuario')
     .bail()
-    .isLength({ min: 3 })
-    .withMessage('El usuario debe tener al menos 3 caracteres')
+    .isLength({ min: config.username.minLength })
+    .withMessage(`El usuario debe tener al menos ${config.username.minLength} caracteres`)
     .bail()
-    .isLength({ max: 25 })
-    .withMessage('El usuario debe tener hasta 25 caracteres')
+    .isLength({ max: config.username.maxLength })
+    .withMessage(`El usuario debe tener hasta ${config.username.maxLength} caracteres`)
     .bail()
-    .matches(/^[a-zA-Z0-9_]+$/)
+    .matches(config.username.allowedPattern)
     .withMessage('Usuario inválido, sólo se admiten letras, números y/o _')
     .bail()
     .custom(async (username: string, meta: Meta): Promise<any> => {

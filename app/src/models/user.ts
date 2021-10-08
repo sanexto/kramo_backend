@@ -30,7 +30,7 @@ class User extends Model {
         },
         username: {
           type: DataTypes.STRING({
-            length: 255,
+            length: config.username.maxLength,
           }),
           allowNull: false,
         },

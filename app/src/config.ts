@@ -23,5 +23,14 @@ export default {
       max: '9999-12-31 23:59:59',
     },
   },
+  username: {
+    minLength: 3,
+    maxLength: 25,
+    allowedPattern: /^[a-zA-Z0-9_]+$/,
+  },
+  password: {
+    minLength: 8,
+    maxLength: 64,
+  },
   locale: 'es',
 };
