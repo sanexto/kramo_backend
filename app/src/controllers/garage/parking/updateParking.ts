@@ -295,7 +295,14 @@ class UpdateParking {
       .withMessage('El campo "Fecha de salida" no es una cadena de texto')
       .bail()
       .trim()
-      .if(body('exitDate').notEmpty())
+      .if((exitDate: string, meta: Meta): any => 
+        (!_.isEmpty(exitDate)) || 
+        (!_.isNil(req.body.exitTime) && (!_.isString(req.body.exitTime) || !_.isEmpty(_.trim(req.body.exitTime)))) || 
+        (!_.isNil(req.body.price) && (!_.isString(req.body.price) || !_.isEmpty(_.trim(req.body.price))))
+      )
+      .notEmpty()
+      .withMessage('Debes ingresar la fecha de salida del vehículo')
+      .bail()
       .custom((exitDate: string, meta: Meta): any => {
 
         if (moment(exitDate, 'YYYY/MM/DD', true).isBetween(config.types.date.min, config.types.date.max, undefined, '[]')) {
@@ -311,22 +318,6 @@ class UpdateParking {
       })
       .bail()
       .run(req);
-
-      validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
-
-      if (!_.has(validationError, 'exitDate')) {
-
-        await body('exitDate')
-        .if((exitDate: string, meta: Meta): any => 
-          (!_.isNil(req.body.exitTime) && (!_.isString(req.body.exitTime) || !_.isEmpty(_.trim(req.body.exitTime)))) || 
-          (!_.isNil(req.body.price) && (!_.isString(req.body.price) || !_.isEmpty(_.trim(req.body.price))))
-        )
-        .notEmpty()
-        .withMessage('Debes ingresar la fecha de salida del vehículo')
-        .bail()
-        .run(req);
-
-      }
 
       validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
@@ -360,7 +351,14 @@ class UpdateParking {
       .withMessage('El campo "Hora de salida" no es una cadena de texto')
       .bail()
       .trim()
-      .if(body('exitTime').notEmpty())
+      .if((exitTime: string, meta: Meta): any => 
+        (!_.isEmpty(exitTime)) || 
+        (!_.isNil(req.body.exitDate) && (!_.isString(req.body.exitDate) || !_.isEmpty(_.trim(req.body.exitDate)))) || 
+        (!_.isNil(req.body.price) && (!_.isString(req.body.price) || !_.isEmpty(_.trim(req.body.price))))
+      )
+      .notEmpty()
+      .withMessage('Debes ingresar la hora de salida del vehículo')
+      .bail()
       .custom((exitTime: string, meta: Meta): any => {
 
         if (moment(exitTime, 'HH:mm', true).isValid()) {
@@ -376,22 +374,6 @@ class UpdateParking {
       })
       .bail()
       .run(req);
-
-      validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
-
-      if (!_.has(validationError, 'exitTime')) {
-
-        await body('exitTime')
-        .if((exitTime: string, meta: Meta): any => 
-          (!_.isNil(req.body.exitDate) && (!_.isString(req.body.exitDate) || !_.isEmpty(_.trim(req.body.exitDate)))) || 
-          (!_.isNil(req.body.price) && (!_.isString(req.body.price) || !_.isEmpty(_.trim(req.body.price))))
-        )
-        .notEmpty()
-        .withMessage('Debes ingresar la hora de salida del vehículo')
-        .bail()
-        .run(req);
-
-      }
 
       validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
@@ -426,7 +408,14 @@ class UpdateParking {
       .withMessage('El campo "Importe" no es una cadena de texto')
       .bail()
       .trim()
-      .if(body('price').notEmpty())
+      .if((price: string, meta: Meta): any => 
+        (!_.isEmpty(price)) || 
+        (!_.isNil(req.body.exitDate) && (!_.isString(req.body.exitDate) || !_.isEmpty(_.trim(req.body.exitDate)))) || 
+        (!_.isNil(req.body.exitTime) && (!_.isString(req.body.exitTime) || !_.isEmpty(_.trim(req.body.exitTime))))
+      )
+      .notEmpty()
+      .withMessage('Debes ingresar el importe de aparcamiento')
+      .bail()
       .customSanitizer((price: string, meta: Meta): string => {
     
         return Globalize.numberParser()(price).toString();
@@ -460,22 +449,6 @@ class UpdateParking {
       })(config.types.decimal.max)}`)
       .bail()
       .run(req);
-
-      validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
-
-      if (!_.has(validationError, 'price')) {
-
-        await body('price')
-        .if((price: string, meta: Meta): any => 
-          (!_.isNil(req.body.exitDate) && (!_.isString(req.body.exitDate) || !_.isEmpty(_.trim(req.body.exitDate)))) || 
-          (!_.isNil(req.body.exitTime) && (!_.isString(req.body.exitTime) || !_.isEmpty(_.trim(req.body.exitTime))))
-        )
-        .notEmpty()
-        .withMessage('Debes ingresar el importe de aparcamiento')
-        .bail()
-        .run(req);
-
-      }
 
       validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 
