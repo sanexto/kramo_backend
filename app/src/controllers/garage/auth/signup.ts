@@ -192,6 +192,9 @@ class Signup {
     .notEmpty()
     .withMessage('Debes ingresar nuevamente la contraseña')
     .bail()
+    .isLength({ max: config.password.maxLength })
+    .withMessage(`La contraseña debe tener hasta ${config.password.maxLength} caracteres`)
+    .bail()
     .if((repeatPassword: string, meta: Meta): boolean => 
       !_.has(validationError, 'password')
     )

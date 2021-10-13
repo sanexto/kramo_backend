@@ -148,6 +148,9 @@ class UpdatePassword {
     .notEmpty()
     .withMessage('Debes ingresar nuevamente la contraseña nueva')
     .bail()
+    .isLength({ max: config.password.maxLength })
+    .withMessage(`La contraseña nueva debe tener hasta ${config.password.maxLength} caracteres`)
+    .bail()
     .if((repeatNewPassword: string, meta: Meta): boolean => 
       !_.has(validationError, 'newPassword')
     )
