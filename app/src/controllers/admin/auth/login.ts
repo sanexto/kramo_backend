@@ -18,7 +18,7 @@ class Login {
     };
 
     output.body = {
-      title: 'Hola!',
+      title: 'Bienvenido',
       form: {
         login: {
           field: {

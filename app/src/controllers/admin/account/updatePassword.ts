@@ -136,6 +136,8 @@ class UpdatePassword {
     .bail()
     .run(req);
 
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+
     await body('repeatNewPassword')
     .exists({ checkNull: true })
     .withMessage('El campo "Repetir contraseña nueva" no existe')
@@ -146,30 +148,24 @@ class UpdatePassword {
     .notEmpty()
     .withMessage('Debes ingresar nuevamente la contraseña nueva')
     .bail()
+    .if((repeatNewPassword: string, meta: Meta): boolean => 
+      !_.has(validationError, 'newPassword')
+    )
+    .custom((repeatNewPassword: string, meta: Meta): any => {
+
+      if (repeatNewPassword == req.body.newPassword) {
+
+        return true;
+
+      } else {
+
+        throw new Error('No coincide con la contraseña nueva ingresada');
+
+      }
+
+    })
+    .bail()
     .run(req);
-
-    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
-
-    if (!_.has(validationError, 'newPassword') && !_.has(validationError, 'repeatNewPassword')) {
-
-      await body('repeatNewPassword')
-      .custom((repeatNewPassword: string, meta: Meta): any => {
-
-        if (repeatNewPassword == req.body.newPassword) {
-  
-          return true;
-  
-        } else {
-  
-          throw new Error('No coincide con la contraseña nueva ingresada');
-  
-        }
-  
-      })
-      .bail()
-      .run(req);
-
-    }
 
     validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
 

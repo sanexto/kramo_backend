@@ -186,6 +186,8 @@ class AddParking {
     .bail()
     .run(req);
 
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+
     await body('exitDate')
     .exists({ checkNull: true })
     .withMessage('El campo "Fecha de salida" no existe')
@@ -194,10 +196,10 @@ class AddParking {
     .withMessage('El campo "Fecha de salida" no es una cadena de texto')
     .bail()
     .trim()
-    .if((exitDate: string, meta: Meta): any => 
+    .if((exitDate: string, meta: Meta): boolean => 
       (!_.isEmpty(exitDate)) || 
-      (!_.isNil(req.body.exitTime) && (!_.isString(req.body.exitTime) || !_.isEmpty(_.trim(req.body.exitTime)))) || 
-      (!_.isNil(req.body.price) && (!_.isString(req.body.price) || !_.isEmpty(_.trim(req.body.price))))
+      (!_.isNil(req.body.exitTime) && _.isString(req.body.exitTime) && !_.isEmpty(_.trim(req.body.exitTime))) || 
+      (!_.isNil(req.body.price) && _.isString(req.body.price) && !_.isEmpty(_.trim(req.body.price)))
     )
     .notEmpty()
     .withMessage('Debes ingresar la fecha de salida del vehículo')
@@ -216,31 +218,26 @@ class AddParking {
 
     })
     .bail()
+    .if((exitDate: string, meta: Meta): boolean => 
+      !_.has(validationError, 'entryDate')
+    )
+    .custom((exitDate: string, meta: Meta): any => {
+
+      if (moment(exitDate, 'YYYY/MM/DD', true).isSameOrAfter(moment(req.body.entryDate, 'YYYY/MM/DD', true))) {
+
+        return true;
+
+      } else {
+
+        throw new Error('La fecha de salida del vehículo debe ser igual o posterior a la fecha de entrada');
+
+      }
+
+    })
+    .bail()
     .run(req);
 
     validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
-
-    if (!_.has(validationError, 'entryDate') && !_.has(validationError, 'exitDate')) {
-
-      await body('exitDate')
-      .if(body('exitDate').notEmpty())
-      .custom((exitDate: string, meta: Meta): any => {
-
-        if (moment(exitDate, 'YYYY/MM/DD', true).isSameOrAfter(moment(req.body.entryDate, 'YYYY/MM/DD', true))) {
-
-          return true;
-
-        } else {
-
-          throw new Error('La fecha de salida del vehículo debe ser igual o posterior a la fecha de entrada');
-
-        }
-
-      })
-      .bail()
-      .run(req);
-
-    }
 
     await body('exitTime')
     .exists({ checkNull: true })
@@ -250,10 +247,10 @@ class AddParking {
     .withMessage('El campo "Hora de salida" no es una cadena de texto')
     .bail()
     .trim()
-    .if((exitTime: string, meta: Meta): any => 
+    .if((exitTime: string, meta: Meta): boolean => 
       (!_.isEmpty(exitTime)) || 
-      (!_.isNil(req.body.exitDate) && (!_.isString(req.body.exitDate) || !_.isEmpty(_.trim(req.body.exitDate)))) || 
-      (!_.isNil(req.body.price) && (!_.isString(req.body.price) || !_.isEmpty(_.trim(req.body.price))))
+      (!_.isNil(req.body.exitDate) && _.isString(req.body.exitDate) && !_.isEmpty(_.trim(req.body.exitDate))) || 
+      (!_.isNil(req.body.price) && _.isString(req.body.price) && !_.isEmpty(_.trim(req.body.price)))
     )
     .notEmpty()
     .withMessage('Debes ingresar la hora de salida del vehículo')
@@ -272,32 +269,26 @@ class AddParking {
 
     })
     .bail()
+    .if((exitTime: string, meta: Meta): boolean => 
+      !_.has(validationError, 'entryDate') && 
+      !_.has(validationError, 'entryTime') && 
+      !_.has(validationError, 'exitDate')
+    )
+    .custom((exitTime: string, meta: Meta): any => {
+
+      if (!(moment(req.body.exitDate, 'YYYY/MM/DD', true).isSame(moment(req.body.entryDate, 'YYYY/MM/DD', true)) && moment(exitTime, 'HH:mm', true).isBefore(moment(req.body.entryTime, 'HH:mm', true)))) {
+
+        return true;
+
+      } else {
+
+        throw new Error('La hora de salida del vehículo debe ser igual o posterior a la hora de entrada');
+
+      }
+
+    })
+    .bail()
     .run(req);
-
-    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
-
-    if (!_.has(validationError, 'entryDate') && !_.has(validationError, 'entryTime') && !_.has(validationError, 'exitDate') && !_.has(validationError, 'exitTime')) {
-
-      await body('exitTime')
-      .if(body('exitDate').notEmpty())
-      .if(body('exitTime').notEmpty())
-      .custom((exitTime: string, meta: Meta): any => {
-
-        if (!(moment(req.body.exitDate, 'YYYY/MM/DD', true).isSame(moment(req.body.entryDate, 'YYYY/MM/DD', true)) && moment(exitTime, 'HH:mm', true).isBefore(moment(req.body.entryTime, 'HH:mm', true)))) {
-
-          return true;
-
-        } else {
-
-          throw new Error('La hora de salida del vehículo debe ser igual o posterior a la hora de entrada');
-
-        }
-
-      })
-      .bail()
-      .run(req);
-
-    }
 
     await body('price')
     .exists({ checkNull: true })
@@ -307,10 +298,10 @@ class AddParking {
     .withMessage('El campo "Importe" no es una cadena de texto')
     .bail()
     .trim()
-    .if((price: string, meta: Meta): any => 
+    .if((price: string, meta: Meta): boolean => 
       (!_.isEmpty(price)) || 
-      (!_.isNil(req.body.exitDate) && (!_.isString(req.body.exitDate) || !_.isEmpty(_.trim(req.body.exitDate)))) || 
-      (!_.isNil(req.body.exitTime) && (!_.isString(req.body.exitTime) || !_.isEmpty(_.trim(req.body.exitTime))))
+      (!_.isNil(req.body.exitDate) && _.isString(req.body.exitDate) && !_.isEmpty(_.trim(req.body.exitDate))) || 
+      (!_.isNil(req.body.exitTime) && _.isString(req.body.exitTime) && !_.isEmpty(_.trim(req.body.exitTime)))
     )
     .notEmpty()
     .withMessage('Debes ingresar el importe de aparcamiento')
