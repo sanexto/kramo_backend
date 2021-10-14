@@ -37,7 +37,7 @@ namespace User {
 
     if (user != null) {
 
-      if (user.enabled == null || user.enabled == false) {
+      if (user.enabled == undefined || user.enabled == null || user.enabled == false) {
 
         result = CheckResult.NotEnabled;
 
