@@ -54,17 +54,17 @@ class UpdateAccount {
               name: {
                 label: 'Nombre',
                 hint: '',
-                value: _.isNull(garage.name) ? '' : garage.name,
+                value: _.isNil(garage.name) ? '' : garage.name,
               },
               email: {
                 label: 'Correo',
                 hint: '',
-                value: _.isNull(garage.email) ? '' : garage.email,
+                value: _.isNil(garage.email) ? '' : garage.email,
               },
               username: {
                 label: 'Usuario',
                 hint: '',
-                value: _.isNull(garage.User.username) ? '' : garage.User.username,
+                value: _.isNil(garage.User.username) ? '' : garage.User.username,
               },
             },
             button: {

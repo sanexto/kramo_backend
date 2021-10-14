@@ -89,22 +89,22 @@ class UpdateAdmin {
                 name: {
                   label: 'Nombre',
                   hint: '',
-                  value: _.isNull(admin.name) ? '' : admin.name,
+                  value: _.isNil(admin.name) ? '' : admin.name,
                 },
                 surname: {
                   label: 'Apellido',
                   hint: '',
-                  value: _.isNull(admin.surname) ? '' : admin.surname,
+                  value: _.isNil(admin.surname) ? '' : admin.surname,
                 },
                 email: {
                   label: 'Correo',
                   hint: '',
-                  value: _.isNull(admin.email) ? '' : admin.email,
+                  value: _.isNil(admin.email) ? '' : admin.email,
                 },
                 username: {
                   label: 'Usuario',
                   hint: '',
-                  value: _.isNull(admin.User.username) ? '' : admin.User.username,
+                  value: _.isNil(admin.User.username) ? '' : admin.User.username,
                 },
                 password: {
                   label: 'Contraseña',
@@ -114,7 +114,7 @@ class UpdateAdmin {
                 },
                 enabled: {
                   label: 'Habilitado',
-                  value: _.isNull(admin.User.enabled) ? false : admin.User.enabled,
+                  value: _.isNil(admin.User.enabled) ? false : admin.User.enabled,
                 },
               },
               button: {

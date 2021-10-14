@@ -82,7 +82,7 @@ class DeleteAdmin {
         output.body = {
           state: 2,
           title: 'Eliminar administrador',
-          content: `¿Está seguro que desea eliminar el administrador "${_.isNull(admin.User.username) ? '' : admin.User.username}"?`,
+          content: `¿Está seguro que desea eliminar el administrador "${_.isNil(admin.User.username) ? '' : admin.User.username}"?`,
           form: {
             deleteAdmin: {
               button: {

@@ -194,9 +194,9 @@ class ListGarage {
 
           const item: Record<string, any> = {
             info: {
-              userId: _.isNull(garage.User.id) ? 0 : garage.User.id,
-              username: _.isNull(garage.User.username) ? '' : garage.User.username,
-              fullName: _.isNull(garage.name) ? '' : garage.name,
+              userId: _.isNil(garage.User.id) ? 0 : garage.User.id,
+              username: _.isNil(garage.User.username) ? '' : garage.User.username,
+              fullName: _.isNil(garage.name) ? '' : garage.name,
             },
             menu: {
               item: [

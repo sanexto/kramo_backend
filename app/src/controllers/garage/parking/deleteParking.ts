@@ -77,7 +77,7 @@ class DeleteParking {
         output.body = {
           state: 2,
           title: 'Eliminar aparcamiento',
-          content: `¿Está seguro que desea eliminar el aparcamiento #${_.isNull(parking.id) ? '' : parking.id}?`,
+          content: `¿Está seguro que desea eliminar el aparcamiento #${_.isNil(parking.id) ? '' : parking.id}?`,
           form: {
             deleteParking: {
               button: {

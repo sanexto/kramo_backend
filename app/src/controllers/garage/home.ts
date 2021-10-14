@@ -46,9 +46,9 @@ class Home {
         state: 2,
         title: 'Aparcamientos',
         garageAccount: {
-          fullName: _.isNull(garage.name) ? '' : garage.name,
-          username: _.isNull(garage.User.username) ? '' : garage.User.username,
-          picture: `${(_.isNull(garage.User.username) ? '' : garage.User.username).substr(0, 1).toUpperCase()}${(_.isNull(garage.User.username) ? '' : garage.User.username).substr(-1, 1).toUpperCase()}`,
+          fullName: _.isNil(garage.name) ? '' : garage.name,
+          username: _.isNil(garage.User.username) ? '' : garage.User.username,
+          picture: `${(_.isNil(garage.User.username) ? '' : garage.User.username).substr(0, 1).toUpperCase()}${(_.isNil(garage.User.username) ? '' : garage.User.username).substr(-1, 1).toUpperCase()}`,
         },
         navMenu: {
           item: {

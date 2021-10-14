@@ -66,25 +66,25 @@ class ViewGarage {
 
         output.body = {
           state: 2,
-          title: _.isNull(garage.User.username) ? '' : garage.User.username,
+          title: _.isNil(garage.User.username) ? '' : garage.User.username,
           garageInfo: {
             name: {
               label: 'Nombre',
-              value: _.isNull(garage.name) ? '' : garage.name,
+              value: _.isNil(garage.name) ? '' : garage.name,
             },
             email: {
               label: 'Correo',
-              value: _.isNull(garage.email) ? '' : garage.email,
+              value: _.isNil(garage.email) ? '' : garage.email,
             },
             username: {
               label: 'Usuario',
-              value: _.isNull(garage.User.username) ? '' : garage.User.username,
+              value: _.isNil(garage.User.username) ? '' : garage.User.username,
             },
             enabled: {
               label: 'Habilitado',
-              value: _.isNull(garage.User.enabled) ? '' : (garage.User.enabled ? 'Sí' : 'No'),
+              value: _.isNil(garage.User.enabled) ? '' : (garage.User.enabled ? 'Sí' : 'No'),
             },
-            picture: `${(_.isNull(garage.User.username) ? '' : garage.User.username).substr(0, 1).toUpperCase()}${(_.isNull(garage.User.username) ? '' : garage.User.username).substr(-1, 1).toUpperCase()}`,
+            picture: `${(_.isNil(garage.User.username) ? '' : garage.User.username).substr(0, 1).toUpperCase()}${(_.isNil(garage.User.username) ? '' : garage.User.username).substr(-1, 1).toUpperCase()}`,
           },
         };
 

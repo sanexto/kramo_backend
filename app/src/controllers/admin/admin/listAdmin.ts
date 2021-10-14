@@ -211,9 +211,9 @@ class ListAdmin {
 
           const item: Record<string, any> = {
             info: {
-              userId: _.isNull(admin.User.id) ? 0 : admin.User.id,
-              username: _.isNull(admin.User.username) ? '' : admin.User.username,
-              fullName: `${_.isNull(admin.name) ? '' : admin.name} ${_.isNull(admin.surname) ? '' : admin.surname}`,
+              userId: _.isNil(admin.User.id) ? 0 : admin.User.id,
+              username: _.isNil(admin.User.username) ? '' : admin.User.username,
+              fullName: `${_.isNil(admin.name) ? '' : admin.name} ${_.isNil(admin.surname) ? '' : admin.surname}`,
             },
             menu: {
               item: [
