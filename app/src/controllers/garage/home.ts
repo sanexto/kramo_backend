@@ -46,9 +46,9 @@ class Home {
         state: 2,
         title: 'Aparcamientos',
         garageAccount: {
-          fullName: _.isNil(garage.name) ? '' : garage.name,
-          username: _.isNil(garage.User.username) ? '' : garage.User.username,
-          picture: `${(_.isNil(garage.User.username) ? '' : garage.User.username).substr(0, 1).toUpperCase()}${(_.isNil(garage.User.username) ? '' : garage.User.username).substr(-1, 1).toUpperCase()}`,
+          fullName: garage.name,
+          username: garage.User.username,
+          picture: `${garage.User.username.substr(0, 1).toUpperCase()}${garage.User.username.substr(-1, 1).toUpperCase()}`,
         },
         navMenu: {
           item: {
@@ -87,7 +87,7 @@ class Home {
               item: {
                 clearFilter: {
                   title: 'Limpiar',
-                }
+                },
               },
             },
             form: {

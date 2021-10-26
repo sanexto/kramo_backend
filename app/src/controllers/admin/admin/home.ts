@@ -37,7 +37,7 @@ class Home {
             item: {
               clearFilter: {
                 title: 'Limpiar',
-              }
+              },
             },
           },
           form: {

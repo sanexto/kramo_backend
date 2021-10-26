@@ -54,14 +54,14 @@ class ListParking {
     .withMessage('El campo "Término" no es una cadena de texto')
     .bail()
     .trim()
+    .isLength({ max: 255 })
+    .withMessage('El término de búsqueda debe tener hasta 255 caracteres')
+    .bail()
     .customSanitizer((term: string, meta: Meta): string => {
   
       return _.replace(term, /\s{2,}/g, ' ');
       
     })
-    .isLength({ max: 255 })
-    .withMessage('El término de búsqueda debe tener hasta 255 caracteres')
-    .bail()
     .run(req);
 
     await query('entry')
@@ -74,6 +74,9 @@ class ListParking {
     .trim()
     .notEmpty()
     .withMessage('El campo "Entrada" está vacío')
+    .bail()
+    .isLength({ max: Math.max(config.types.date.min.split(' ')[0].length, config.types.date.max.split(' ')[0].length) * 2 + 3 })
+    .withMessage('El campo "Entrada" no tiene una longitud válida')
     .bail()
     .customSanitizer((entry: string, meta: Meta): string[] => {
   
@@ -126,6 +129,9 @@ class ListParking {
     .trim()
     .notEmpty()
     .withMessage('El campo "Salida" está vacío')
+    .bail()
+    .isLength({ max: Math.max(config.types.date.min.split(' ')[0].length, config.types.date.max.split(' ')[0].length) * 2 + 3 })
+    .withMessage('El campo "Salida" no tiene una longitud válida')
     .bail()
     .customSanitizer((exit: string, meta: Meta): string[] => {
   
@@ -303,22 +309,22 @@ class ListParking {
 
           const item: Record<string, any> = {
             info: {
-              parkingId: _.isNil(parking.id) ? 0 : parking.id,
+              parkingId: parking.id,
               plate: {
                 label: 'Matrícula',
-                value: _.isNil(parking.plate) ? '' : parking.plate,
+                value: parking.plate,
               },
               entry: {
                 label: 'Entrada',
-                value: _.isNil(parking.entry) ? '' : moment(parking.entry).format('YYYY/MM/DD HH:mm'),
+                value: moment(parking.entry).format('YYYY/MM/DD HH:mm'),
               },
               exit: {
                 label: 'Salida',
-                value: _.isNil(parking.exit) ? '-' : moment(parking.exit).format('YYYY/MM/DD HH:mm'),
+                value: _.isNull(parking.exit) ? '-' : moment(parking.exit).format('YYYY/MM/DD HH:mm'),
               },
               price: {
                 label: 'Importe',
-                value: _.isNil(parking.price) ? '-' : `$ ${Globalize.numberFormatter({
+                value: _.isNull(parking.price) ? '-' : `$ ${Globalize.numberFormatter({
                   minimumFractionDigits: Math.max(
                     Math.abs(config.types.decimal.min).toString().split('.')[1].length,
                     Math.abs(config.types.decimal.max).toString().split('.')[1].length,

@@ -68,7 +68,7 @@ class DeleteGarage {
         output.body = {
           state: 2,
           title: 'Eliminar cochera',
-          content: `¿Está seguro que desea eliminar la cochera "${_.isNil(garage.User.username) ? '' : garage.User.username}"?`,
+          content: `¿Está seguro que desea eliminar la cochera "${garage.User.username}"?`,
           form: {
             deleteGarage: {
               button: {

@@ -46,9 +46,9 @@ class Home {
         state: 2,
         title: '',
         adminAccount: {
-          fullName: `${_.isNil(admin.name) ? '' : admin.name} ${_.isNil(admin.surname) ? '' : admin.surname}`,
-          username: _.isNil(admin.User.username) ? '' : admin.User.username,
-          picture: `${(_.isNil(admin.User.username) ? '' : admin.User.username).substr(0, 1).toUpperCase()}${(_.isNil(admin.User.username) ? '' : admin.User.username).substr(-1, 1).toUpperCase()}`,
+          fullName: `${admin.name} ${admin.surname}`,
+          username: admin.User.username,
+          picture: `${admin.User.username.substr(0, 1).toUpperCase()}${admin.User.username.substr(-1, 1).toUpperCase()}`,
         },
         navMenu: {
           item: {

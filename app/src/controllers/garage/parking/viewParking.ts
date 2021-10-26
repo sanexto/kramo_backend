@@ -85,23 +85,23 @@ class ViewParking {
           parkingInfo: {
             parkingId: {
               label: 'ID',
-              value: _.isNil(parking.id) ? 0 : parking.id,
+              value: parking.id,
             },
             plate: {
               label: 'Matrícula',
-              value: _.isNil(parking.plate) ? '' : parking.plate,
+              value: parking.plate,
             },
             entry: {
               label: 'Entrada',
-              value: _.isNil(parking.entry) ? '' : moment(parking.entry).format('YYYY/MM/DD HH:mm'),
+              value: moment(parking.entry).format('YYYY/MM/DD HH:mm'),
             },
             exit: {
               label: 'Salida',
-              value: _.isNil(parking.exit) ? '-' : moment(parking.exit).format('YYYY/MM/DD HH:mm'),
+              value: _.isNull(parking.exit) ? '-' : moment(parking.exit).format('YYYY/MM/DD HH:mm'),
             },
             price: {
               label: 'Importe',
-              value: _.isNil(parking.price) ? '-' : `$ ${Globalize.numberFormatter({
+              value: _.isNull(parking.price) ? '-' : `$ ${Globalize.numberFormatter({
                 minimumFractionDigits: Math.max(
                   Math.abs(config.types.decimal.min).toString().split('.')[1].length,
                   Math.abs(config.types.decimal.max).toString().split('.')[1].length,

@@ -19,6 +19,8 @@ function tokenAuth(profile: UserBase.Profile): (req: Request, res: Response, nex
     output.body = {
       message: '',
     };
+
+    let validationError: Record<string, Validator.ValidationError> = {};
   
     await header('authorization')
     .exists({ checkNull: true })
@@ -38,7 +40,7 @@ function tokenAuth(profile: UserBase.Profile): (req: Request, res: Response, nex
     .bail()
     .run(req);
   
-    const validationError: Record<string, Validator.ValidationError> = validationResult(req).formatWith(Validator.errorFormatter).mapped();
+    validationError = validationResult(req).formatWith(Validator.errorFormatter).mapped();
   
     if (_.isEmpty(validationError)) {
 

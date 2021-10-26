@@ -75,17 +75,17 @@ class UpdateGarage {
                 name: {
                   label: 'Nombre',
                   hint: '',
-                  value: _.isNil(garage.name) ? '' : garage.name,
+                  value: garage.name,
                 },
                 email: {
                   label: 'Correo',
                   hint: '',
-                  value: _.isNil(garage.email) ? '' : garage.email,
+                  value: garage.email,
                 },
                 username: {
                   label: 'Usuario',
                   hint: '',
-                  value: _.isNil(garage.User.username) ? '' : garage.User.username,
+                  value: garage.User.username,
                 },
                 password: {
                   label: 'Contraseña',
@@ -95,7 +95,7 @@ class UpdateGarage {
                 },
                 enabled: {
                   label: 'Habilitado',
-                  value: _.isNil(garage.User.enabled) ? false : garage.User.enabled,
+                  value: garage.User.enabled,
                 },
               },
               button: {

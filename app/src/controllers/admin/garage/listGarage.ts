@@ -44,14 +44,14 @@ class ListGarage {
     .withMessage('El campo "Término" no es una cadena de texto')
     .bail()
     .trim()
+    .isLength({ max: 255 })
+    .withMessage('El término de búsqueda debe tener hasta 255 caracteres')
+    .bail()
     .customSanitizer((term: string, meta: Meta): string => {
   
       return _.replace(term, /\s{2,}/g, ' ');
       
     })
-    .isLength({ max: 255 })
-    .withMessage('El término de búsqueda debe tener hasta 255 caracteres')
-    .bail()
     .run(req);
 
     await query('orderBy')
@@ -143,17 +143,6 @@ class ListGarage {
             where: {
               [Op.or]: [
                 {
-                  '$User.username$': {
-                    [Op.or]: term.map((token: string): { [Op.substring]: string } => {
-
-                      return {
-                        [Op.substring]: token,
-                      };
-      
-                    }),
-                  },
-                },
-                {
                   '$Garage.name$': {
                     [Op.or]: term.map((token: string): { [Op.substring]: string } => {
 
@@ -166,6 +155,17 @@ class ListGarage {
                 },
                 {
                   '$Garage.email$': {
+                    [Op.or]: term.map((token: string): { [Op.substring]: string } => {
+
+                      return {
+                        [Op.substring]: token,
+                      };
+      
+                    }),
+                  },
+                },
+                {
+                  '$User.username$': {
                     [Op.or]: term.map((token: string): { [Op.substring]: string } => {
 
                       return {
@@ -194,9 +194,9 @@ class ListGarage {
 
           const item: Record<string, any> = {
             info: {
-              userId: _.isNil(garage.User.id) ? 0 : garage.User.id,
-              username: _.isNil(garage.User.username) ? '' : garage.User.username,
-              fullName: _.isNil(garage.name) ? '' : garage.name,
+              userId: garage.User.id,
+              username: garage.User.username,
+              fullName: garage.name,
             },
             menu: {
               item: [

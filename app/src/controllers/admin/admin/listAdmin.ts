@@ -45,14 +45,14 @@ class ListAdmin {
     .withMessage('El campo "Término" no es una cadena de texto')
     .bail()
     .trim()
+    .isLength({ max: 255 })
+    .withMessage('El término de búsqueda debe tener hasta 255 caracteres')
+    .bail()
     .customSanitizer((term: string, meta: Meta): string => {
   
       return _.replace(term, /\s{2,}/g, ' ');
       
     })
-    .isLength({ max: 255 })
-    .withMessage('El término de búsqueda debe tener hasta 255 caracteres')
-    .bail()
     .run(req);
 
     await query('orderBy')
@@ -149,17 +149,6 @@ class ListAdmin {
             where: {
               [Op.or]: [
                 {
-                  '$User.username$': {
-                    [Op.or]: term.map((token: string): { [Op.substring]: string } => {
-
-                      return {
-                        [Op.substring]: token,
-                      };
-      
-                    }),
-                  },
-                },
-                {
                   '$Admin.name$': {
                     [Op.or]: term.map((token: string): { [Op.substring]: string } => {
 
@@ -192,6 +181,17 @@ class ListAdmin {
                     }),
                   },
                 },
+                {
+                  '$User.username$': {
+                    [Op.or]: term.map((token: string): { [Op.substring]: string } => {
+
+                      return {
+                        [Op.substring]: token,
+                      };
+      
+                    }),
+                  },
+                },
               ],
             },
             order: [
@@ -211,9 +211,9 @@ class ListAdmin {
 
           const item: Record<string, any> = {
             info: {
-              userId: _.isNil(admin.User.id) ? 0 : admin.User.id,
-              username: _.isNil(admin.User.username) ? '' : admin.User.username,
-              fullName: `${_.isNil(admin.name) ? '' : admin.name} ${_.isNil(admin.surname) ? '' : admin.surname}`,
+              userId: admin.User.id,
+              username: admin.User.username,
+              fullName: `${admin.name} ${admin.surname}`,
             },
             menu: {
               item: [

@@ -54,22 +54,22 @@ class UpdateAccount {
               name: {
                 label: 'Nombre',
                 hint: '',
-                value: _.isNil(admin.name) ? '' : admin.name,
+                value: admin.name,
               },
               surname: {
                 label: 'Apellido',
                 hint: '',
-                value: _.isNil(admin.surname) ? '' : admin.surname,
+                value: admin.surname,
               },
               email: {
                 label: 'Correo',
                 hint: '',
-                value: _.isNil(admin.email) ? '' : admin.email,
+                value: admin.email,
               },
               username: {
                 label: 'Usuario',
                 hint: '',
-                value: _.isNil(admin.User.username) ? '' : admin.User.username,
+                value: admin.User.username,
               },
             },
             button: {

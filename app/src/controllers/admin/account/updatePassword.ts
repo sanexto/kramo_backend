@@ -176,7 +176,7 @@ class UpdatePassword {
 
       const repeatNewPassword: string = String(req.body.repeatNewPassword);
       
-      const passwordHash = await bcrypt.hash(repeatNewPassword, await bcrypt.genSalt());
+      const passwordHash: string = await bcrypt.hash(repeatNewPassword, await bcrypt.genSalt());
 
       let updatedPassword: boolean = false;
       const transaction: Transaction = await sequelize.transaction();

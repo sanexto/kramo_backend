@@ -89,7 +89,7 @@ class UpdateParking {
                 plate: {
                   label: 'Matrícula',
                   hint: '',
-                  value: _.isNil(parking.plate) ? '' : parking.plate,
+                  value: parking.plate,
                 },
                 price: {
                   label: 'Importe',
@@ -104,7 +104,7 @@ class UpdateParking {
                     ),
                     useGrouping: false,
                   })(123.45),
-                  value: _.isNil(parking.price) ? '' : Globalize.numberFormatter({
+                  value: _.isNull(parking.price) ? '' : Globalize.numberFormatter({
                     minimumFractionDigits: Math.max(
                       Math.abs(config.types.decimal.min).toString().split('.')[1].length,
                       Math.abs(config.types.decimal.max).toString().split('.')[1].length,
@@ -124,13 +124,13 @@ class UpdateParking {
                     date: {
                       label: 'Fecha',
                       hint: 'Seleccionar',
-                      value: _.isNil(parking.entry) ? '' : moment(parking.entry).format('YYYY/MM/DD'),
+                      value: moment(parking.entry).format('YYYY/MM/DD'),
                       pickerHint: 'DD/MM/AAAA',
                     },
                     time: {
                       label: 'Hora',
                       hint: 'Seleccionar',
-                      value: _.isNil(parking.entry) ? '' : moment(parking.entry).format('HH:mm'),
+                      value: moment(parking.entry).format('HH:mm'),
                       pickerHint: 'HH:MM',
                     },
                   },
@@ -141,13 +141,13 @@ class UpdateParking {
                     date: {
                       label: 'Fecha',
                       hint: 'Seleccionar',
-                      value: _.isNil(parking.exit) ? '' : moment(parking.exit).format('YYYY/MM/DD'),
+                      value: _.isNull(parking.exit) ? '' : moment(parking.exit).format('YYYY/MM/DD'),
                       pickerHint: 'DD/MM/AAAA',
                     },
                     time: {
                       label: 'Hora',
                       hint: 'Seleccionar',
-                      value: _.isNil(parking.exit) ? '' : moment(parking.exit).format('HH:mm'),
+                      value: _.isNull(parking.exit) ? '' : moment(parking.exit).format('HH:mm'),
                       pickerHint: 'HH:MM',
                     },
                   },

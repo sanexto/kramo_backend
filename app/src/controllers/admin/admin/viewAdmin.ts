@@ -80,29 +80,29 @@ class ViewAdmin {
 
         output.body = {
           state: 2,
-          title: _.isNil(admin.User.username) ? '' : admin.User.username,
+          title: admin.User.username,
           adminInfo: {
             name: {
               label: 'Nombre',
-              value: _.isNil(admin.name) ? '' : admin.name,
+              value: admin.name,
             },
             surname: {
               label: 'Apellido',
-              value: _.isNil(admin.surname) ? '' : admin.surname,
+              value: admin.surname,
             },
             email: {
               label: 'Correo',
-              value: _.isNil(admin.email) ? '' : admin.email,
+              value: admin.email,
             },
             username: {
               label: 'Usuario',
-              value: _.isNil(admin.User.username) ? '' : admin.User.username,
+              value: admin.User.username,
             },
             enabled: {
               label: 'Habilitado',
-              value: _.isNil(admin.User.enabled) ? '' : (admin.User.enabled ? 'Sí' : 'No'),
+              value: admin.User.enabled ? 'Sí' : 'No',
             },
-            picture: `${(_.isNil(admin.User.username) ? '' : admin.User.username).substr(0, 1).toUpperCase()}${(_.isNil(admin.User.username) ? '' : admin.User.username).substr(-1, 1).toUpperCase()}`,
+            picture: `${admin.User.username.substr(0, 1).toUpperCase()}${admin.User.username.substr(-1, 1).toUpperCase()}`,
           },
         };
 
